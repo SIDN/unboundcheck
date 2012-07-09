@@ -1,14 +1,32 @@
 package main
 
 import (
+	"code.google.com/p/gorilla/mux"
 	"flag"
 	"fmt"
 	"github.com/miekg/dns"
+	"log"
+	"net/http"
 	"os"
 	"unbound"
 )
 
+func CheckHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Hello")
+}
+
 func main() {
+	router := mux.NewRouter()
+	router.HandleFunc("/check/{domain}/{ds}", CheckHandler)
+
+	http.Handle("/", router)
+
+	e := http.ListenAndServe(":12345", nil)
+        if e != nil {
+        	log.Fatal("ListenAndServe: ", e)
+        }
+
+
 	u := unbound.New()
 	defer u.Destroy()
 	flag.Parse()
