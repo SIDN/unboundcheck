@@ -85,7 +85,7 @@ func main() {
 
 	http.Handle("/", router)
 
-	e := http.ListenAndServe(":12345", nil)
+	e := http.ListenAndServe(":8080", nil)
 	if e != nil {
 		log.Fatal("ListenAndServe: ", e)
 	}
