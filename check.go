@@ -4,26 +4,22 @@ import (
 	"code.google.com/p/gorilla/mux"
 	"fmt"
 	"github.com/miekg/dns"
+	"io"
 	"log"
 	"net/http"
 	"unbound"
 )
 
-func CheckHandler(w http.ResponseWriter, r *http.Request) {
+func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Hello")
 	vars := mux.Vars(r)
 	zone := vars["domain"]
-	ds := vars["ds"]
-	log.Printf("%s: %s", zone, ds)
+	trust := vars["trust"]
+	log.Printf("%s: %s", zone, trust)
 
 	u := unbound.New()
 	defer u.Destroy()
-	if err := setupUnbound(u); err != nil {
-		log.Printf("error %s\n", err.Error())
-		log.Printf("error %s\n", err.Error())
-		return
-	}
-	// As for NS, so we can use these later on
+	setupUnbound(u)
 	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
 	if err != nil {
 		log.Printf("error %s\n", err.Error())
@@ -49,7 +45,7 @@ func CheckHandler(w http.ResponseWriter, r *http.Request) {
 
 	u1 := unbound.New()
 	setupUnbound(u1)
-	if err := u1.AddTa(ds); err != nil {
+	if err := u1.AddTa(trust); err != nil {
 		log.Printf("error %s\n", err.Error())
 		fmt.Fprintf(w, "error %s\n", err.Error())
 		return
@@ -79,11 +75,69 @@ func CheckHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func checkHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	zone := vars["domain"]
+
+	u := unbound.New()
+	defer u.Destroy()
+	setupUnbound(u)
+	line := zone + ";"
+	dnsviz := "http://dnsviz.net/d/" + zone + "/dnssec/"
+	// As for NS, so we can use these later on
+	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
+	if err != nil {
+		line += "error;" + err.Error() + ";" + dnsviz
+		fmt.Fprintln(w, line)
+		return
+	}
+
+	if res.HaveData {
+		if res.Secure {
+			line += "secure;;" + dnsviz
+		} else if res.Bogus {
+			line += "bogus;" + res.WhyBogus + ";" + dnsviz
+		} else {
+			line += "insecure;;" + dnsviz
+		}
+	} else {
+		line += "nodata;;" + dnsviz
+	}
+	fmt.Fprintln(w, line)
+}
+
+func upload(w http.ResponseWriter, r *http.Request) {
+	f, _, err := r.FormFile("domainlist")
+	if err != nil {
+		fmt.Println(err)
+	}
+	io.Copy(w, f)
+}
+
+func form(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, `
+<html>
+	<head>
+	<title>Oepload</title>
+	</head>
+	<body>
+	<p>Upload a csv with domain names:</p>
+	<form action=""http://localhost:8080/upload/" method="POST" enctype="multipart/form-data">
+	<input type="file" name="domainlist">
+	<input type="submit" value="Upload">
+	</form>
+	</body>
+</html>`)
+}
+
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/check/{domain}/{ds}", CheckHandler)
+	router.HandleFunc("/precheck/{domain}/{anchor}", preCheckHandler)
+	router.HandleFunc("/check/{domain}", checkHandler)
 
 	http.Handle("/", router)
+	http.HandleFunc("/upload", upload)
+	http.HandleFunc("/form", form)
 
 	e := http.ListenAndServe(":8080", nil)
 	if e != nil {
@@ -92,12 +146,7 @@ func main() {
 
 }
 
-func setupUnbound(u *unbound.Unbound) error {
-	if err := u.ResolvConf("/etc/resolv.conf"); err != nil {
-		return err
-	}
-	if err := u.AddTaFile("Kroot.key"); err != nil {
-		return err
-	}
-	return nil
+func setupUnbound(u *unbound.Unbound) {
+	u.ResolvConf("/etc/resolv.conf")
+	u.AddTaFile("Kroot.key")
 }
