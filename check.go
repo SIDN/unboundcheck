@@ -1,10 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"code.google.com/p/gorilla/mux"
 	"fmt"
 	"github.com/miekg/dns"
-	"io"
 	"log"
 	"net/http"
 	"unbound"
@@ -75,21 +75,14 @@ func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func checkHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	zone := vars["domain"]
-
-	u := unbound.New()
-	defer u.Destroy()
-	setupUnbound(u)
-	line := zone + ";"
+func unboundcheck(u *unbound.Unbound, zone string) (line string) {
+	line = zone + ";"
 	dnsviz := "http://dnsviz.net/d/" + zone + "/dnssec/"
 	// As for NS, so we can use these later on
 	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
 	if err != nil {
 		line += "error;" + err.Error() + ";" + dnsviz
-		fmt.Fprintln(w, line)
-		return
+		return line + "\n"
 	}
 
 	if res.HaveData {
@@ -103,15 +96,36 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		line += "nodata;;" + dnsviz
 	}
-	fmt.Fprintln(w, line)
+	return line + "\n"
+}
+
+func checkHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	zone := vars["domain"]
+
+	u := unbound.New()
+	defer u.Destroy()
+	setupUnbound(u)
+	fmt.Fprintf(w, unboundcheck(u, zone))
 }
 
 func upload(w http.ResponseWriter, r *http.Request) {
 	f, _, err := r.FormFile("domainlist")
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
-	io.Copy(w, f)
+	fmt.Fprintf(w, "Seen document\n")
+	u := unbound.New()
+	defer u.Destroy()
+	setupUnbound(u)
+	// Assume line based for now
+	b := bufio.NewReader(f)
+	line, _, err := b.ReadLine()
+	for err == nil {
+		fmt.Fprintf(w, unboundcheck(u, string(line)))
+		line, _, err = b.ReadLine()
+	}
 }
 
 func form(w http.ResponseWriter, r *http.Request) {
@@ -122,7 +136,7 @@ func form(w http.ResponseWriter, r *http.Request) {
 	</head>
 	<body>
 	<p>Upload a csv with domain names:</p>
-	<form action=""http://localhost:8080/upload/" method="POST" enctype="multipart/form-data">
+	<form action="http://localhost:8080/upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
 	<input type="submit" value="Upload">
 	</form>
@@ -134,10 +148,9 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/precheck/{domain}/{anchor}", preCheckHandler)
 	router.HandleFunc("/check/{domain}", checkHandler)
-
+	router.HandleFunc("/upload", upload)
+	router.HandleFunc("/form", form)
 	http.Handle("/", router)
-	http.HandleFunc("/upload", upload)
-	http.HandleFunc("/form", form)
 
 	e := http.ListenAndServe(":8080", nil)
 	if e != nil {
