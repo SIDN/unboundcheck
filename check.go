@@ -82,6 +82,7 @@ func unboundcheck(u *unbound.Unbound, zone string) (line string) {
 	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
 	if err != nil {
 		line += "error;" + err.Error() + ";" + dnsviz
+		log.Printf(line + "\n")
 		return line + "\n"
 	}
 
@@ -96,6 +97,7 @@ func unboundcheck(u *unbound.Unbound, zone string) (line string) {
 	} else {
 		line += "nodata;;" + dnsviz
 	}
+	log.Printf(line + "\n")
 	return line + "\n"
 }
 
@@ -115,7 +117,6 @@ func upload(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Fprintf(w, "Seen document\n")
 	u := unbound.New()
 	defer u.Destroy()
 	setupUnbound(u)
@@ -132,11 +133,11 @@ func form(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `
 <html>
 	<head>
-	<title>Oepload</title>
+	<title>Upload</title>
 	</head>
 	<body>
-	<p>Upload a csv with domain names:</p>
-	<form action="http://localhost:8080/upload" method="POST" enctype="multipart/form-data">
+	<p>Upload a text file with domain names (one name per line):</p>
+	<form action="http://miek.nl:8080/upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
 	<input type="submit" value="Upload">
 	</form>
