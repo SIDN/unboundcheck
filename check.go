@@ -23,7 +23,6 @@ func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
 	if err != nil {
 		log.Printf("error %s\n", err.Error())
-		log.Printf("error %s\n", err.Error())
 		return
 	}
 
@@ -75,30 +74,39 @@ func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func unboundcheck(u *unbound.Unbound, zone string) (line string) {
-	line = zone + ";"
-	dnsviz := "http://dnsviz.net/d/" + zone + "/dnssec/"
+// Output html
+func unboundcheck(u *unbound.Unbound, zone string, even bool) (line string) {
+	if even {
+		line = "<tru class=\"even\">"
+	} else {
+		line = "<tr class=\"odd\">"
+	}
+	line += "<td>" + zone + "</td>"
+	dnsviz := "<td><a href=\"http://dnsviz.net/d/" + zone + "/dnssec/\">dnsviz</a></td>"
+
 	// As for NS, so we can use these later on
 	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
 	if err != nil {
-		line += "error;" + err.Error() + ";" + dnsviz
+		line += "<td>" + err.Error() + "</td>" + dnsviz
 		log.Printf(line + "\n")
-		return line + "\n"
+		return line + "</tr>"
+	} else {
+
 	}
 
 	if res.HaveData {
 		if res.Secure {
-			line += "secure;;" + dnsviz
+			line += "<td>secure</td><td></td>" + dnsviz
 		} else if res.Bogus {
-			line += "bogus;" + res.WhyBogus + ";" + dnsviz
+			line += "<td>bogus</td><td>" + res.WhyBogus + "</td>" + dnsviz
 		} else {
-			line += "insecure;;" + dnsviz
+			line += "<td>insecure</td><td></td>" + dnsviz
 		}
 	} else {
-		line += "nodata;;" + dnsviz
+		line += "<td>nodata</td><td></td>" + dnsviz
 	}
 	log.Printf(line + "\n")
-	return line + "\n"
+	return line + "</tr>"
 }
 
 func checkHandler(w http.ResponseWriter, r *http.Request) {
@@ -108,7 +116,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	u := unbound.New()
 	defer u.Destroy()
 	setupUnbound(u)
-	fmt.Fprintf(w, unboundcheck(u, zone))
+	fmt.Fprintf(w, unboundcheck(u, zone, false))
 }
 
 func upload(w http.ResponseWriter, r *http.Request) {
@@ -123,10 +131,21 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	// Assume line based for now
 	b := bufio.NewReader(f)
 	line, _, err := b.ReadLine()
+	even := false
+	fmt.Fprintf(w,`
+<html>
+	<head>
+		<title>Results</title>
+	</head>
+	<body>
+	<table>`)
+
 	for err == nil {
-		fmt.Fprintf(w, unboundcheck(u, string(line)))
+		fmt.Fprintf(w, unboundcheck(u, string(line), even))
 		line, _, err = b.ReadLine()
+		even = !even
 	}
+	fmt.Fprintf(w, "</table></body></html>")
 }
 
 func form(w http.ResponseWriter, r *http.Request) {
