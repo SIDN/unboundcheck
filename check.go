@@ -156,8 +156,12 @@ func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 	for err == nil {
 		for _, r := range record {
 			result := unboundcheck(u, r)
-			o.Write(result.serialize())
+			log.Printf("%v\n", result)
+			if e := o.Write(result.serialize()); e != nil {
+				log.Printf("Failed to write csv: %s\n", e.Error())
+			}
 		}
+		o.Flush()
 		record, err = v.Read()
 	}
 }
