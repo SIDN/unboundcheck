@@ -1,14 +1,42 @@
 package main
 
 import (
-	"bufio"
 	"code.google.com/p/gorilla/mux"
+	"encoding/csv"
 	"fmt"
 	"github.com/miekg/dns"
 	"log"
 	"net/http"
+	"strings"
 	"unbound"
 )
+
+type result struct {
+	name	string	// name to be checked
+	err	string	// error from unbound (if any)
+	status	string	// security status
+	why	string	// WhyBogus from unbound (DNSSEC error)
+	dnsviz	string	// link to dnsviz for further checking
+}
+
+// Create a string slice from *result
+func (r *result) serialize() []string {
+	if r != nil {
+		s := make([]string, 5)
+		s[0] = r.name
+		s[1] = r.err
+		s[2] = r.status
+		s[3] = r.why
+		s[4] = r.dnsviz
+		return s
+	}
+	return nil
+}
+
+// Create HTML from *result
+func (r *result) serializeToHTML() {
+	// ...
+}
 
 func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Hello")
@@ -75,38 +103,30 @@ func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Output html
-func unboundcheck(u *unbound.Unbound, zone string, even bool) (line string) {
-	if even {
-		line = "<tru class=\"even\">"
-	} else {
-		line = "<tr class=\"odd\">"
-	}
-	line += "<td>" + zone + "</td>"
-	dnsviz := "<td><a href=\"http://dnsviz.net/d/" + zone + "/dnssec/\">dnsviz</a></td>"
-
-	// As for NS, so we can use these later on
+func unboundcheck(u *unbound.Unbound, zone string) *result {
+	zone = strings.TrimSpace(zone)
+	r := new(result)
+	r.name = zone
+	r.dnsviz = "http://dnsviz.net/d/" + zone + "/dnssec/"
 	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
+	log.Printf("checking %s\n", zone)
 	if err != nil {
-		line += "<td>" + err.Error() + "</td>" + dnsviz
-		log.Printf(line + "\n")
-		return line + "</tr>"
-	} else {
-
+		r.err = err.Error()
+		return r
 	}
-
 	if res.HaveData {
 		if res.Secure {
-			line += "<td>secure</td><td></td>" + dnsviz
+			r.status = "secure"
 		} else if res.Bogus {
-			line += "<td>bogus</td><td>" + res.WhyBogus + "</td>" + dnsviz
+			r.status = "bogus"
+			r.why = res.WhyBogus
 		} else {
-			line += "<td>insecure</td><td></td>" + dnsviz
+			r.status = "insecure"
 		}
 	} else {
-		line += "<td>nodata</td><td></td>" + dnsviz
+		r.err = "nodata"
 	}
-	log.Printf(line + "\n")
-	return line + "</tr>"
+	return r
 }
 
 func checkHandler(w http.ResponseWriter, r *http.Request) {
@@ -116,10 +136,11 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	u := unbound.New()
 	defer u.Destroy()
 	setupUnbound(u)
-	fmt.Fprintf(w, unboundcheck(u, zone, false))
+	result := unboundcheck(u, zone)
+	fmt.Fprintf(w, "%+v\n", result)
 }
 
-func upload(w http.ResponseWriter, r *http.Request) {
+func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 	f, _, err := r.FormFile("domainlist")
 	if err != nil {
 		fmt.Println(err)
@@ -129,36 +150,29 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	defer u.Destroy()
 	setupUnbound(u)
 	// Assume line based for now
-	b := bufio.NewReader(f)
-	line, _, err := b.ReadLine()
-	even := false
-	fmt.Fprintf(w,`
-<html>
-	<head>
-		<title>Results</title>
-	</head>
-	<body>
-	<table>`)
-
+	v := csv.NewReader(f)
+	o := csv.NewWriter(w)
+	record, err := v.Read()
 	for err == nil {
-		fmt.Fprintf(w, unboundcheck(u, string(line), even))
-		line, _, err = b.ReadLine()
-		even = !even
+		for _, r := range record {
+			result := unboundcheck(u, r)
+			o.Write(result.serialize())
+		}
+		record, err = v.Read()
 	}
-	fmt.Fprintf(w, "</table></body></html>")
 }
 
 func form(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `
 <html>
 	<head>
-	<title>Upload</title>
+	<title>Portfolio check</title>
 	</head>
 	<body>
-	<p>Upload a text file with domain names (one name per line):</p>
-	<form action="http://miek.nl:8080/upload" method="POST" enctype="multipart/form-data">
+	<p>Selecteer een <em>CSV</em> bestand met domein namen:</p>
+	<form action="http://localhost:8080/upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
-	<input type="submit" value="Upload">
+	<input type="submit" value="Controleer">
 	</form>
 	</body>
 </html>`)
@@ -168,7 +182,7 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/precheck/{domain}/{anchor}", preCheckHandler)
 	router.HandleFunc("/check/{domain}", checkHandler)
-	router.HandleFunc("/upload", upload)
+	router.HandleFunc("/upload", parseHandlerCSV)
 	router.HandleFunc("/form", form)
 	http.Handle("/", router)
 
@@ -176,7 +190,6 @@ func main() {
 	if e != nil {
 		log.Fatal("ListenAndServe: ", e)
 	}
-
 }
 
 func setupUnbound(u *unbound.Unbound) {
