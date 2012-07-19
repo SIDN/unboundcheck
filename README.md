@@ -1,3 +1,3 @@
 # Portfolio check
 
-A Go program that checkes a list of domain name of (DNSSEC) resolving errors.
+A Go program that checks a list of domain name for (DNSSEC) resolving errors.
