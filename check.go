@@ -178,7 +178,7 @@ dt {
 	<div class="portfolio">
 	<div class="pagetitle"><h2>Selecteer een <em>CSV</em> bestand met domein namen</h2></div>
 	<p> 
-	<form action="http://localhost:8080/upload" method="POST" enctype="multipart/form-data">
+	<form action="http://check.sidnlabs.nl:8080/upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
 	<input type="submit" value="Controleer">
 	</form>
@@ -221,10 +221,10 @@ dt {
 	<dd>Uiteraard is dat mogelijk door een bestand te uploaden dat maar 1 domein naam bevat. Of u kunt
 	de volgende URL gebruiken die een RESTful-achtige interface aanbiedt:
 	<p>
-	<a href="http://localhost:8080/check/">localhost:8080/check/domeinnaam</a>
+	<a href="http://check.sidnlabs.nl:8080/check/">check.sidnlabs.nl:8080/check/domeinnaam</a>
 	</p>
 	Bv: 
-	<a href="http://localhost:8080/check/example.nl">localhost:8080/check/example.nl</a>
+	<a href="http://check.sidnlabs.nl:8080/check/example.nl">check.sidnlabs.nl:8080/check/example.nl</a>
 	<p>
 	De uitvoer daarvan is gelijk aan de portfolio-check uitvoer (CSV).
 	</p>
