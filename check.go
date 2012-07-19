@@ -253,7 +253,7 @@ dt {
 
 	<div class="portfolio">
 	<div class="pagetitle"><h2>Disclaimer</h2></div>
-	Dit is beta software! Neem bij problemen met het gebruikt van deze software contact op met miek.gieben@sidn.nl .
+	Dit is beta software! Neem bij problemen met het gebruik van deze software contact op met miek.gieben@sidn.nl .
 	<p>&nbsp;</p>
 	</div>
 
