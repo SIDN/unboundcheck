@@ -65,8 +65,11 @@ func unboundcheck(u *unbound.Unbound, zone string) *result {
 	zone = strings.TrimSpace(zone)
 	r := new(result)
 	r.name = zone
-	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
 	log.Printf("checking %s\n", zone)
+	if zone == "" {
+		return r
+	}
+	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
 	if err != nil {
 		r.err = err.Error()
 		return r
