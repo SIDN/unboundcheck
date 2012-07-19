@@ -107,7 +107,8 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 	f, _, err := r.FormFile("domainlist")
 	if err != nil {
-		log.Printf("Error opening uploaded file: ", err)
+		log.Printf("Error opening CSV: %s\n", err.Error())
+		fmt.Fprintf(w, "Error opening CSV: %s\n", err.Error())
 		return
 	}
 	u := unbound.New()
@@ -119,6 +120,12 @@ func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 	record, err := v.Read()
 	all := NewAllResults()
 	i := 0
+	if err != nil {
+		log.Printf("Malformed CSV: %s ", err.Error())
+		fmt.Fprintf(w, "Malformed CSV: %s\n", err.Error())
+		return
+
+	}
 Check:
 	for err == nil {
 		for _, r := range record {
@@ -182,7 +189,7 @@ dt {
 	<div class="portfolio">
 	<div class="pagetitle"><h2>Selecteer een <em>CSV</em> bestand met domein namen</h2></div>
 	
-	<form action="http://check.sidnlabs.nl:8080/upload" method="POST" enctype="multipart/form-data">
+	<form action="http://miek.nl:8080/upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
 	<input type="submit" value="Controleer">
 	</form>
