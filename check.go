@@ -7,17 +7,35 @@ import (
 	"github.com/miekg/dns"
 	"log"
 	"net/http"
+	"sort"
 	"strings"
 	"unbound"
 )
 
 type result struct {
-	name	string	// name to be checked
-	err	string	// error from unbound (if any)
-	status	string	// security status
-	why	string	// WhyBogus from unbound (DNSSEC error)
-	dnsviz	string	// link to dnsviz for further checking
+	name   string // name to be checked
+	err    string // error from unbound (if any)
+	status string // security status
+	why    string // WhyBogus from unbound (DNSSEC error)
+	dnsviz string // link to dnsviz for further checking
 }
+
+type AllResults struct {
+	r []*result
+}
+
+func NewAllResults() *AllResults {
+	a := new(AllResults)
+	a.r = make([]*result, 0)
+	return a
+}
+
+func (a *AllResults) Append(r *result) { a.r = append(a.r, r) }
+func (a *AllResults) Len() int         { return len(a.r) }
+
+// Sort on status (bogus is with a 'b' so it will end up first)
+func (a *AllResults) Less(i, j int) bool { return a.r[i].status < a.r[j].status }
+func (a *AllResults) Swap(i, j int)      { a.r[i], a.r[j] = a.r[j], a.r[i] }
 
 // Create a string slice from *result
 func (r *result) serialize() []string {
@@ -149,20 +167,25 @@ func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 	u := unbound.New()
 	defer u.Destroy()
 	setupUnbound(u)
-	// Assume line based for now
+
 	v := csv.NewReader(f)
 	o := csv.NewWriter(w)
 	record, err := v.Read()
+	all := NewAllResults()
 	for err == nil {
 		for _, r := range record {
 			result := unboundcheck(u, r)
 			log.Printf("%v\n", result)
-			if e := o.Write(result.serialize()); e != nil {
-				log.Printf("Failed to write csv: %s\n", e.Error())
-			}
+			all.Append(result)
+		}
+		record, err = v.Read()
+	}
+	sort.Sort(all)
+	for _, r := range all.r {
+		if e := o.Write(r.serialize()); e != nil {
+			log.Printf("Failed to write csv: %s\n", e.Error())
 		}
 		o.Flush()
-		record, err = v.Read()
 	}
 }
 
