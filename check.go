@@ -205,7 +205,7 @@ dt {
 	limiet ingesteld van 1000 domein namen (per run).
 
 	Er wordt een secure lookup via <a href="http://www.unbound.net">Unbound</a> uitgevoerd. Er zal dus een <em>willekeurige</em> selectie van nameservers
-	plaatsvinden en is er is geen garantie dat al uw slaves nameservers worden gecheckt.</dd>
+	plaatsvinden en is er is geen garantie dat al uw slave nameservers worden gecheckt.</dd>
 
 	<dt>Hoe ziet de uitvoer eruit?</dt>
 	<dd>De uitvoer van deze check is:
