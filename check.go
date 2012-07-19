@@ -104,7 +104,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 	f, _, err := r.FormFile("domainlist")
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("Error opening uploaded file: ", err)
 		return
 	}
 	u := unbound.New()
