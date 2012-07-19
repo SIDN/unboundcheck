@@ -141,6 +141,7 @@ Check:
 
 func form(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `
+<!doctype html>
 <html>
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
