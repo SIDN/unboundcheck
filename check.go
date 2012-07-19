@@ -135,6 +135,7 @@ Check:
 			i++
 			if i > LIMIT {
 				// Nu is het zat...!
+				log.Printf("limit seen")
 				break Check
 			}
 		}
