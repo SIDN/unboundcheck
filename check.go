@@ -161,9 +161,9 @@ func form(w http.ResponseWriter, r *http.Request) {
 	<link href="http://www.sidnlabs.nl/fileadmin/sidnlabs/css/all.css" rel="stylesheet" charset="utf-8" type="text/css">
 	<style type="text/css" media="screen">
 .portfolio {
-	margin-left: auto;
-	margin-right; auto;
-	width: 80%;
+	margin-left: 20%;
+	margin-right; 20%;
+	width: 60%;
 }
 dt {
 	font-weight: bold;
@@ -255,6 +255,7 @@ dt {
 	<div class="portfolio">
 	<div class="pagetitle"><h2>Disclaimer</h2></div>
 	Dit is beta software! Neem bij problemen met het gebruikt van deze software contact op met miek.gieben@sidn.nl .
+	<p>&nbsp;</p>
 	</div>
 
 	</div> <!-- canvas -->
