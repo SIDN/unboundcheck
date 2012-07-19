@@ -141,13 +141,13 @@ Check:
 
 func form(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `
-<!doctype html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Portfolio check</title>
 	<link rel="shortcut icon" type="image/x-icon" href="http://sidnlabs.nl/favicon.ico">
-	<link href="http://www.sidnlabs.nl/fileadmin/sidnlabs/css/all.css" rel="stylesheet" charset="utf-8" type="text/css"/>
+	<link href="http://www.sidnlabs.nl/fileadmin/sidnlabs/css/all.css" rel="stylesheet" charset="utf-8" type="text/css">
 	<style type="text/css" media="screen">
 .portfolio {
 	margin-left: auto;
@@ -178,12 +178,12 @@ dt {
 
 	<div class="portfolio">
 	<div class="pagetitle"><h2>Selecteer een <em>CSV</em> bestand met domein namen</h2></div>
-	<p> 
+	
 	<form action="http://check.sidnlabs.nl:8080/upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
 	<input type="submit" value="Controleer">
 	</form>
-	</p>
+	
 	</div>
 
 	<div class="portfolio">
@@ -191,8 +191,8 @@ dt {
 	<dl>
 	<dt>Hoe wordt er gecontroleeerd?</dt>
 	<dd>U uploadt een CSV bestand met domein namen. Alle namen worden gecontroleerd, dus ook niet-.nl domein namen.
-	<p>
-	Er wordt een secure lookup via Unbound uitgevoerd. Er zal dus een <em>willekeurige</em> selectie van nameservers
+
+	Er wordt een secure lookup via <a href="http://www.unbound.net">Unbound</a> uitgevoerd. Er zal dus een <em>willekeurige</em> selectie van nameservers
 	plaatsvinden en is er is geen garantie dat al uw slaves nameservers worden gecheckt.</dd>
 
 	<dt>Hoe ziet de uitvoer eruit?</dt>
@@ -230,12 +230,12 @@ dt {
 	De uitvoer daarvan is gelijk aan de portfolio-check uitvoer (CSV).
 	</p>
 	<dt>Welke software wordt gebruikt?</dt>
-	Deze portfolio-check gebruikt:
+	<dd>Deze portfolio-check gebruikt:
 	<ul>
 		<li>Libunbound van <a href="http://www.nlnetlabs.nl">NLnet Labs</a></li>
 		<li>De taal <a href="http://www.golang.org">Go</a></li>
 	</ul>
-	De software zelf is te vinden op <a href="http://github.com/SIDN/unboundcheck>github.com/SIDN/unboundcheck">github.com</a>.
+	De software zelf is te vinden op <a href="http://github.com/SIDN/unboundcheck">github.com/SIDN/unboundcheck</a>.
 	</dd>
 	</dl>
 	</div>
