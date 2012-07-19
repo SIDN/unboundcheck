@@ -17,7 +17,6 @@ type result struct {
 	err    string // error from unbound (if any)
 	status string // security status
 	why    string // WhyBogus from unbound (DNSSEC error)
-	dnsviz string // link to dnsviz for further checking
 }
 
 type AllResults struct {
@@ -37,95 +36,33 @@ func (a *AllResults) Len() int         { return len(a.r) }
 func (a *AllResults) Less(i, j int) bool { return a.r[i].status < a.r[j].status }
 func (a *AllResults) Swap(i, j int)      { a.r[i], a.r[j] = a.r[j], a.r[i] }
 
-// Create a string slice from *result
+// Create a string slice from *result for printing
 func (r *result) serialize() []string {
 	if r != nil {
-		s := make([]string, 5)
+		s := make([]string, 4)
 		s[0] = r.name
 		s[1] = r.err
 		s[2] = r.status
 		s[3] = r.why
-		s[4] = r.dnsviz
 		return s
 	}
 	return nil
 }
 
-// Create HTML from *result
+// Create HTML from *result (not used yet)
 func (r *result) serializeToHTML() {
 	// ...
 }
 
+// TODO(mg)
 func preCheckHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Hello")
-	vars := mux.Vars(r)
-	zone := vars["domain"]
-	trust := vars["trust"]
-	log.Printf("%s: %s", zone, trust)
-
-	u := unbound.New()
-	defer u.Destroy()
-	setupUnbound(u)
-	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
-	if err != nil {
-		log.Printf("error %s\n", err.Error())
-		return
-	}
-
-	if res.HaveData {
-		if res.Secure {
-			log.Printf("Result is secure\n")
-			fmt.Fprintf(w, "Result is secure\n")
-		} else if res.Bogus {
-			log.Printf("Result is bogus: %s\n", res.WhyBogus)
-			fmt.Fprintf(w, "Result is bogus: %s\n", res.WhyBogus)
-		} else {
-			log.Printf("Result is insecure\n")
-			fmt.Fprintf(w, "Result is insecure\n")
-		}
-	} else {
-		println("NO DATA")
-		return
-	}
-
-	u1 := unbound.New()
-	setupUnbound(u1)
-	if err := u1.AddTa(trust); err != nil {
-		log.Printf("error %s\n", err.Error())
-		fmt.Fprintf(w, "error %s\n", err.Error())
-		return
-	}
-
-	res, err = u1.Resolve(zone, dns.TypeNS, dns.ClassINET)
-	if err != nil {
-		log.Printf("error %s\n", err.Error())
-		fmt.Fprintf(w, "error %s\n", err.Error())
-		return
-	}
-	if res.HaveData {
-		if res.Secure {
-			log.Printf("Result is secure\n")
-			fmt.Fprintf(w, "Result is secure\n")
-		} else if res.Bogus {
-			log.Printf("Result is bogus: %s\n", res.WhyBogus)
-			fmt.Fprintf(w, "Result is bogus: %s\n", res.WhyBogus)
-		} else {
-			log.Printf("Result is insecure\n")
-			fmt.Fprintf(w, "Result is insecure\n")
-		}
-	} else {
-		log.Printf("NO DATA")
-		fmt.Fprintf(w, "NO DATA")
-		return
-	}
+	return
 }
 
-// Output html
 func unboundcheck(u *unbound.Unbound, zone string) *result {
 	zone = strings.TrimSpace(zone)
 	r := new(result)
 	r.name = zone
-	r.dnsviz = "http://dnsviz.net/d/" + zone + "/dnssec/"
 	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
 	log.Printf("checking %s\n", zone)
 	if err != nil {
@@ -155,7 +92,11 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	defer u.Destroy()
 	setupUnbound(u)
 	result := unboundcheck(u, zone)
-	fmt.Fprintf(w, "%+v\n", result)
+	o := csv.NewWriter(w)
+	if e := o.Write(result.serialize()); e != nil {
+		log.Printf("Failed to write csv: %s\n", e.Error())
+	}
+	o.Flush()
 }
 
 func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
@@ -196,18 +137,71 @@ func form(w http.ResponseWriter, r *http.Request) {
 	<title>Portfolio check</title>
 	</head>
 	<body>
-	<p>Selecteer een <em>CSV</em> bestand met domein namen:</p>
+	<h1>Selecteer een <em>CSV</em> bestand met domein namen:</h1>
 	<form action="http://localhost:8080/upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
 	<input type="submit" value="Controleer">
 	</form>
+	<h2>FAQ</h2>
+	<dl>
+	<dt>Hoe wordt er gecontroleeerd?</dt>
+	<dd>U uploadt een CSV bestand met domein namen. Alle namen worden gecontroleerd, dus ook niet-.nl domein namen.
+	<p>
+	Er wordt een secure lookup via Unbound uitgevoerd. Er zal dus een <em>willekeurige</em> selectie van nameservers
+	plaatsvinden en is er is geen garantie dat al uw slaves nameservers worden gecheckt.</dd>
+
+	<dt>Hoe ziet de uitvoer eruit?</dt>
+	<dd>De uitvoer van deze check is:
+	<p>
+	<code>
+		domeinnaam, DNS error, security status, uitgebreide error als bogus
+	</code>
+	</p>
+
+	De security status kan zijn
+	<ul>
+	<li><b>secure</b>: de domein naam is correct beveiligd met DNSSEC</li>
+	<li><b>bogus</b>: de domein naam is <em>niet</em> correct beveiligd met DNSSEC</li>
+	<li><b>insecure</b>: de domein naam is niet beveiligd met DNSSEC</li>
+
+	</ul>
+	<p/>
+	De DNS error als Unbound geen informatie kan vinden in het DNS, er zal hier dan de
+	string <b>nodata</b> worden weergegeven.
+	<p/>
+	De uitvoer is gesorteerd op de security status, dus alle <em>b</em>ogus domeinen komen vooraan te staan.
+
+	</dd>
+
+	<dt>Kan er ook een enkele domein naam worden gecontroleerd?</dt>
+	<dd>Uiteraard is dat mogelijk door een bestand te uploaden dat maar 1 domein naam bevat. Of u kunt
+	de volgende URL gebruiken die een RESTful-achtige interface aanbiedt:
+	<p>
+	<a href="http://localhost:8080/check/">localhost:8080/check/domeinnaam</a>
+	</p>
+	Bv: 
+	<a href="http://localhost:8080/check/example.nl">localhost:8080/check/example.nl</a>
+	<p>
+	De uitvoer daarvan is gelijk aan de portfolio-check uitvoer (CSV).
+	</p>
+	<dd>Welke software is gebruikt?</dd>
+	Deze portfolio-check gebruikt:
+	<ul>
+		<li>Libunbound van <a href="http://www.nlnetlabs.nl">NLnet Labs</a></li>
+		<li>De taal <a href="http://www.golang.org">Go</a></li>
+	</ul>
+	De complete software is te vinden op <a href="http://github.com/SIDN/unboundcheck>github.com/SIDN/unboundcheck</a>.
+	</dd>
+	</dl>
+	<h2>Disclaimer</h2>
+	Dit is beta software! 
 	</body>
 </html>`)
 }
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/precheck/{domain}/{anchor}", preCheckHandler)
+	//router.HandleFunc("/precheck/{domain}/{anchor}", preCheckHandler) // TODO(mg)
 	router.HandleFunc("/check/{domain}", checkHandler)
 	router.HandleFunc("/upload", parseHandlerCSV)
 	router.HandleFunc("/form", form)
@@ -219,6 +213,7 @@ func main() {
 	}
 }
 
+// Setup the resolver and add the root's trust anchor
 func setupUnbound(u *unbound.Unbound) {
 	u.ResolvConf("/etc/resolv.conf")
 	u.AddTaFile("Kroot.key")
