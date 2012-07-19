@@ -215,7 +215,7 @@ dt {
 	</code>
 	</p>
 
-	De security status kan zijn
+	De security status kan zijn:
 	<ul>
 	<li><b>secure</b>: de domein naam is correct beveiligd met DNSSEC</li>
 	<li><b>bogus</b>: de domein naam is <em>niet</em> correct beveiligd met DNSSEC</li>
@@ -223,8 +223,7 @@ dt {
 
 	</ul>
 	<p/>
-	De DNS error als Unbound geen informatie kan vinden in het DNS, er zal hier dan de
-	string <b>nodata</b> worden weergegeven.
+	De DNS error is <b>nodata</b> als Unbound geen informatie kan vinden in het DNS.
 	<p/>
 	De uitvoer is gesorteerd op de security status, dus alle <em>b</em>ogus domeinen komen vooraan te staan.
 
