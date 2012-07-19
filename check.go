@@ -190,7 +190,7 @@ dt {
 	<div class="portfolio">
 	<div class="pagetitle"><h2>Selecteer een <em>CSV</em> bestand met domein namen</h2></div>
 	
-	<form action="http://miek.nl:8080/upload" method="POST" enctype="multipart/form-data">
+	<form action="http://check.sidnlabs.nl:8080/upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
 	<input type="submit" value="Controleer">
 	</form>
