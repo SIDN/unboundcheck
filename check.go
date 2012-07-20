@@ -246,7 +246,7 @@ dt {
 		<li>Libunbound van <a href="http://www.nlnetlabs.nl">NLnet Labs</a></li>
 		<li>De taal <a href="http://www.golang.org">Go</a></li>
 	</ul>
-	De software zelf is te vinden op <a href="http://github.com/SIDN/unboundcheck">github.com/SIDN/unboundcheck</a>.
+	De software zelf is open source en is te vinden op <a href="http://github.com/SIDN/unboundcheck">github.com/SIDN/unboundcheck</a>.
 	</dd>
 	</dl>
 	</div>
