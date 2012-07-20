@@ -183,7 +183,7 @@ dt {
 	<p>&nbsp;</p>
 	<p>&nbsp;</p>
 	<div class="portfolio">
-	<div class="pagetitle"><h1>SIDN Labs: Portfolio Checker</h1></div>
+	<div class="pagetitle"><h1>SIDN Labs Portfolio Checker</h1></div>
 	<p>&nbsp;</p>
 	</div>
 
