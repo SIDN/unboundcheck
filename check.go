@@ -183,7 +183,7 @@ dt {
 	<p>&nbsp;</p>
 	<p>&nbsp;</p>
 	<div class="portfolio">
-	<div class="pagetitle"><h1>SIDN Labs: Portfolio check</h1></div>
+	<div class="pagetitle"><h1>SIDN Labs: Portfolio Checker</h1></div>
 	<p>&nbsp;</p>
 	</div>
 
@@ -200,12 +200,12 @@ dt {
 	<div class="portfolio">
 	<div class="pagetitle"><h2>FAQ</h2></div>
 	<dl>
-	<dt>Hoe wordt er gecontroleeerd?</dt>
+	<dt>Hoe wordt er gecontroleerd?</dt>
 	<dd>U uploadt een CSV bestand met domein namen. Alle namen worden gecontroleerd, dus ook niet-.nl domein namen. Er is een
 	limiet ingesteld van 1000 domein namen (per run).
 
 	Er wordt een secure lookup via <a href="http://www.unbound.net">Unbound</a> uitgevoerd. Er zal dus een <em>willekeurige</em> selectie van nameservers
-	plaatsvinden en is er is geen garantie dat al uw slave nameservers worden gecheckt.</dd>
+	plaatsvinden. Er is geen garantie dat al uw slave nameservers worden gecheckt.</dd>
 
 	<dt>Hoe ziet de uitvoer eruit?</dt>
 	<dd>De uitvoer van deze check is:
@@ -220,8 +220,15 @@ dt {
 	<li><b>secure</b>: de domein naam is correct beveiligd met DNSSEC</li>
 	<li><b>bogus</b>: de domein naam is <em>niet</em> correct beveiligd met DNSSEC</li>
 	<li><b>insecure</b>: de domein naam is niet beveiligd met DNSSEC</li>
-
 	</ul>
+	<p>
+	De uitgebreide error van Unbound wanneer een domein <em>bogus</em> TODO(mg)
+	<ul>
+	
+	</ul>
+
+	</p>
+
 	<p/>
 	De DNS error is <b>nodata</b> als Unbound geen informatie kan vinden in het DNS.
 	<p/>
@@ -238,10 +245,10 @@ dt {
 	Bv: 
 	<a href="http://check.sidnlabs.nl:8080/check/example.nl">check.sidnlabs.nl:8080/check/example.nl</a>
 	<p>
-	De uitvoer daarvan is gelijk aan de portfolio-check uitvoer (CSV).
+	De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV).
 	</p>
 	<dt>Welke software wordt gebruikt?</dt>
-	<dd>Deze portfolio-check gebruikt:
+	<dd>Deze Portfolio Checker gebruikt:
 	<ul>
 		<li>Libunbound van <a href="http://www.nlnetlabs.nl">NLnet Labs</a></li>
 		<li>De taal <a href="http://www.golang.org">Go</a></li>
