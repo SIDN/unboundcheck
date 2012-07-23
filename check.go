@@ -222,13 +222,8 @@ dt {
 	<li><b>insecure</b>: de domein naam is niet beveiligd met DNSSEC</li>
 	</ul>
 	<p>
-	De uitgebreide error van Unbound wanneer een domein <em>bogus</em> TODO(mg)
-	<ul>
-	
-	</ul>
-
-	</p>
-
+	Er kunnen legio oorzaken zijn als een domein <em>bogus</em> is. De error text van Unbound is
+	over het algemeen heel leesbaar.
 	<p/>
 	De DNS error is <b>nodata</b> als Unbound geen informatie kan vinden in het DNS.
 	<p/>
