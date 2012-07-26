@@ -90,9 +90,10 @@ func unboundcheck(u *unbound.Unbound, zone string) *result {
 }
 
 func checkHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("RESTful request from %s\n", r.RemoteAddr)
+
 	vars := mux.Vars(r)
 	zone := vars["domain"]
-
 	u := unbound.New()
 	defer u.Destroy()
 	setupUnbound(u)
@@ -105,6 +106,8 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Upload request from %s\n", r.RemoteAddr)
+
 	f, _, err := r.FormFile("domainlist")
 	if err != nil {
 		log.Printf("Error opening CSV: %s\n", err.Error())
