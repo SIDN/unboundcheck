@@ -206,8 +206,9 @@ dt {
 	<dt>Hoe wordt er gecontroleerd?</dt>
 	<dd>U uploadt een CSV bestand met domein namen. Alle namen worden gecontroleerd, dus ook niet-.nl domein namen. Er is een
 	limiet ingesteld van 1000 domein namen (per run).
-
-	Er wordt een secure lookup via <a href="http://www.unbound.net">Unbound</a> uitgevoerd. Er zal dus een <em>willekeurige</em> selectie van nameservers
+	<p/>
+	Er wordt een secure lookup via <a href="http://www.unbound.net">Unbound</a> uitgevoerd. De query zelf vraagt om NS records.
+	Er zal een <em>willekeurige</em> selectie van nameservers
 	plaatsvinden. Er is geen garantie dat al uw slave nameservers worden gecheckt.</dd>
 
 	<dt>Hoe ziet de uitvoer eruit?</dt>
