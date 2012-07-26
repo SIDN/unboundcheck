@@ -102,6 +102,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	if e := o.Write(result.serialize()); e != nil {
 		log.Printf("Failed to write csv: %s\n", e.Error())
 	}
+	log.Printf("%v\n", result)
 	o.Flush()
 }
 
