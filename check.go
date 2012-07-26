@@ -258,7 +258,14 @@ dt {
 
 	<div class="portfolio">
 	<div class="pagetitle"><h2>Disclaimer</h2></div>
+	<p>
 	Dit is beta software! Neem bij problemen met het gebruik van deze software contact op met miek.gieben@sidn.nl of @miekg op twitter.
+	</p>
+	<p>
+	SIDN zal de Portfolio Checker zelf gebruiken
+	voor statistische doeleinden (% errors in de .nl-zone, etc.), maar geen data
+	publiceren over individuele domeinnamen of registrars.
+	</p>
 	<p>&nbsp;</p>
 	</div>
 
