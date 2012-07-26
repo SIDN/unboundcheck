@@ -159,7 +159,7 @@ func form(w http.ResponseWriter, r *http.Request) {
 <html>
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Portfolio check</title>
+	<title>SIDN Labs Portfolio Checker</title>
 	<link rel="shortcut icon" type="image/x-icon" href="http://sidnlabs.nl/favicon.ico">
 	<link href="http://www.sidnlabs.nl/fileadmin/sidnlabs/css/all.css" rel="stylesheet" charset="utf-8" type="text/css">
 	<style type="text/css" media="screen">
