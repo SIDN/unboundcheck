@@ -178,7 +178,7 @@ dt {
 	<div id="header">
 		<div class="holder">
 			<div class="logolink"><h1 class="logo"><a href="http://sidnlabs.nl">SIDN Labs een kijkje achter de schermen</a></h1></div>
-			<div class="navigation"><ul id="nav"><li><a href="http://www.sidnlabs.nl/over-sidn-labs/" onfocus="blurLink(this)">OVER SIDN LABS</a></li><li><a href="http://www.sidnlabs.nl/contact/" onfocus="blurLink(this)">CONTACT</a></li><li><a href="http://www.werkenbijsidn.nl/" onfocus="blurLink(this)">WERKEN BIJ SIDN</a></li><li><a href="http://www.sidn.nl" onfocus="blurLink(this)">NAAR SIDN.NL</a></li></ul></div>
+			<div class="navigation"><ul id="nav"><li><a href="http://www.sidnlabs.nl/over-sidn-labs/" onfocus="blurLink(this)">OVER SIDN LABS</a></li><li><a href="http://www.sidnlabs.nl/contact/" onfocus="blurLink(this)">CONTACT</a></li><li><a href="http://www.werkenbijsidn.nl/" onfocus="blurLink(this)">WERKEN BIJ SIDN</a></li><li><a href="http://www.sidn.nl" onfocus="blurLink(this)">NAAR SIDN.NL</a></li> <li><a href="http://www.sidnlabs.nl/dns-tools/" onfocus="blurLink(this)">DNS TOOLS</a></li> </ul></div>
 		</div>
 	</div>
 	<div id="wrapper">
@@ -192,6 +192,13 @@ dt {
 	</div>
 
 	<div class="portfolio">
+
+Als je een flink aantal domeinnamen hebt en je wilt deze beveiligen met <a href="http://www.dnssec.nl">DNSSEC</a>,
+dan bestaat altijd het gevaar dat je een paar details over het hoofd ziet en
+niet alle domeinen correct gesigned zijn. SIDN Labs heeft daarom de <a href="http://check.sidnlabs.nl:8080/form">DNSSEC
+Portfolio Checker</a> ontwikkeld, waarmee je dit op een snelle en eenvoudige manier
+kunt controleren.
+
 	<div class="pagetitle"><h2>Selecteer een <em>CSV</em> bestand met domeinnamen</h2></div>
 	
 	<form action="http://check.sidnlabs.nl:8080/upload" method="POST" enctype="multipart/form-data">
@@ -261,7 +268,8 @@ dt {
 	<div class="portfolio">
 	<div class="pagetitle"><h2>Disclaimer</h2></div>
 	<p>
-	Dit is beta software! Neem bij problemen met het gebruik van deze software contact op met miek.gieben@sidn.nl of @miekg op twitter.
+	Dit is beta software! De software wordt <em>expliciet</em> niet ondersteund door SIDN, maar door SIDN Labs. 
+	Neem bij problemen met het gebruik van deze software contact op met miek.gieben@sidn.nl of @miekg op twitter.
 	</p>
 	<p>
 	SIDN zal de Portfolio Checker zelf gebruiken
