@@ -192,7 +192,7 @@ dt {
 	</div>
 
 	<div class="portfolio">
-	<div class="pagetitle"><h2>Selecteer een <em>CSV</em> bestand met domein namen</h2></div>
+	<div class="pagetitle"><h2>Selecteer een <em>CSV</em> bestand met domeinnamen</h2></div>
 	
 	<form action="http://check.sidnlabs.nl:8080/upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
@@ -205,12 +205,12 @@ dt {
 	<div class="pagetitle"><h2>FAQ</h2></div>
 	<dl>
 	<dt>Hoe wordt er gecontroleerd?</dt>
-	<dd>U uploadt een CSV bestand met domein namen. Alle namen worden gecontroleerd, dus ook niet-.nl domein namen. Er is een
+	<dd>Je uploadt een CSV bestand met domein namen. Alle namen worden gecontroleerd, dus ook niet-.nl domein namen. Er is een
 	limiet ingesteld van 1000 domein namen (per run).
 	<p/>
 	Er wordt een secure lookup via <a href="http://www.unbound.net">Unbound</a> uitgevoerd. De query zelf vraagt om NS records.
 	Er zal een <em>willekeurige</em> selectie van nameservers
-	plaatsvinden. Er is geen garantie dat al uw slave nameservers worden gecheckt.</dd>
+	plaatsvinden. Er is geen garantie dat al je slave nameservers worden gecheckt.</dd>
 
 	<dt>Hoe ziet de uitvoer eruit?</dt>
 	<dd>De uitvoer van deze check is:
@@ -237,7 +237,7 @@ dt {
 	</dd>
 
 	<dt>Kan er ook een enkele domein naam worden gecontroleerd?</dt>
-	<dd>Uiteraard is dat mogelijk door een bestand te uploaden dat maar 1 domein naam bevat. Of u kunt
+	<dd>Uiteraard is dat mogelijk door een bestand te uploaden dat maar 1 domein naam bevat. Of je kunt
 	de volgende URL gebruiken die een RESTful-achtige interface aanbiedt:
 	<p>
 	<a href="http://check.sidnlabs.nl:8080/check/">check.sidnlabs.nl:8080/check/domeinnaam</a>
