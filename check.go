@@ -102,7 +102,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	if e := o.Write(result.serialize()); e != nil {
 		log.Printf("Failed to write csv: %s\n", e.Error())
 	}
-	log.Printf("%v\n", result)
+	log.Printf("%v from %s\n", result, r.RemoteAddr)
 	o.Flush()
 }
 
@@ -132,9 +132,9 @@ func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 	}
 Check:
 	for err == nil {
-		for _, r := range record {
-			result := unboundcheck(u, r)
-			log.Printf("%v\n", result)
+		for _, r1 := range record {
+			result := unboundcheck(u, r1)
+			log.Printf("%v from %s\n", result, r.RemoteAddr)
 			all.Append(result)
 			i++
 			if i > LIMIT {
