@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-const LIMIT = 1000
+const LIMIT = 10000
 
 type result struct {
 	name   string // name to be checked
@@ -213,7 +213,7 @@ kunt controleren.
 	<dl>
 	<dt>Hoe wordt er gecontroleerd?</dt>
 	<dd>Je uploadt een CSV bestand met domein namen. Alle namen worden gecontroleerd, dus ook niet-.nl domein namen. Er is een
-	limiet ingesteld van 1000 domein namen (per run).
+	limiet ingesteld van 10000 domein namen (per run).
 	<p/>
 	Er wordt een secure lookup via <a href="http://www.unbound.net">Unbound</a> uitgevoerd. De query zelf vraagt om NS records.
 	Er zal een <em>willekeurige</em> selectie van nameservers
