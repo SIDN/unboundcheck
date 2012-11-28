@@ -12,9 +12,13 @@ import (
 	"strings"
 )
 
+var TYPES = map[string]uint16{"SOA": dns.TypeSOA, "A": dns.TypeA, "NS": dns.TypeNS, "MX": dns.TypeMX, "TXT": dns.TypeTXT,
+	"AAAA": dns.TypeAAAA, "SRV": dns.TypeSRV, "DS": dns.TypeDS, "DNSKEY": dns.TypeDNSKEY}
+
 const LIMIT = 10000
 
 type result struct {
+	typ    string // type to be checked, default to NS
 	name   string // name to be checked
 	err    string // error from unbound (if any)
 	status string // security status
@@ -56,20 +60,27 @@ func (r *result) serializeToHTML() {
 	// ...
 }
 
-// TODO(mg)
+// Checker that checks if a delegation with these keys would be
+// secure when registry adds the DS records. TODO(mg)
 func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func unboundcheck(u *unbound.Unbound, zone string) *result {
+func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
 	zone = strings.TrimSpace(zone)
 	r := new(result)
 	r.name = zone
-	log.Printf("checking %s\n", zone)
+	log.Printf("checking %s %s\n", zone, typ)
 	if zone == "" {
 		return r
 	}
-	res, err := u.Resolve(zone, dns.TypeNS, dns.ClassINET)
+	dnstype := dns.TypeNS
+	r.typ = "NS"
+	if v, ok := TYPES[typ]; ok {
+		dnstype = v
+		r.typ = typ
+	}
+	res, err := u.Resolve(zone, dnstype, dns.ClassINET)
 	if err != nil {
 		r.err = err.Error()
 		return r
@@ -89,6 +100,7 @@ func unboundcheck(u *unbound.Unbound, zone string) *result {
 	return r
 }
 
+// ReST check
 func checkHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("RESTful request from %s\n", r.RemoteAddr)
 
@@ -97,7 +109,26 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	u := unbound.New()
 	defer u.Destroy()
 	setupUnbound(u)
-	result := unboundcheck(u, zone)
+	result := unboundcheck(u, zone, "NS")
+	o := csv.NewWriter(w)
+	if e := o.Write(result.serialize()); e != nil {
+		log.Printf("Failed to write csv: %s\n", e.Error())
+	}
+	log.Printf("%v from %s\n", result, r.RemoteAddr)
+	o.Flush()
+}
+
+// ReST check with a type (copied checkHandler because the functions are small)
+func checkHandlerType(w http.ResponseWriter, r *http.Request) {
+	log.Printf("RESTful request from %s\n", r.RemoteAddr)
+
+	vars := mux.Vars(r)
+	zone := vars["domain"]
+	typ := vars["type"]
+	u := unbound.New()
+	defer u.Destroy()
+	setupUnbound(u)
+	result := unboundcheck(u, zone, typ)
 	o := csv.NewWriter(w)
 	if e := o.Write(result.serialize()); e != nil {
 		log.Printf("Failed to write csv: %s\n", e.Error())
@@ -133,7 +164,7 @@ func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 Check:
 	for err == nil {
 		for _, r1 := range record {
-			result := unboundcheck(u, r1)
+			result := unboundcheck(u, r1, "NS")
 			log.Printf("%v from %s\n", result, r.RemoteAddr)
 			all.Append(result)
 			i++
@@ -252,8 +283,21 @@ kunt controleren.
 	Bv: 
 	<a href="http://check.sidnlabs.nl:8080/check/example.nl">check.sidnlabs.nl:8080/check/example.nl</a>
 	<p>
+	Ook hier wordt om de NS records gevraagd. De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV).
+	</p>
+	<p>
+	Optioneel kan aan de RESTful interface ook een DNS type worden meegeven, zodat er om iets anders gevraagd wordt
+	dan een NS record. Die interface werkt als volgt:
+	<p>
+	<a href="http://check.sidnlabs.nl:8080/check/">check.sidnlabs.nl:8080/check/domeinnaam/type</a>
+	</p>
+	Bv: 
+	<a href="http://check.sidnlabs.nl:8080/check/example.nl">check.sidnlabs.nl:8080/check/example.nl/SOA</a>
+	<p>
+	De lijst van DNS types die gebruikt kunnen worden is: SOA, A, NS, MX, TXT, AAAA, SRV, DS en DNSKEY .
 	De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV).
 	</p>
+
 	<dt>Welke software wordt gebruikt?</dt>
 	<dd>Deze Portfolio Checker gebruikt:
 	<ul>
@@ -261,6 +305,8 @@ kunt controleren.
 		<li>De taal <a href="http://www.golang.org">Go</a></li>
 	</ul>
 	De software zelf is open source en is te vinden op <a href="http://github.com/SIDN/unboundcheck">github.com/SIDN/unboundcheck</a>.
+	De gebruikte packages zijn <a href="http://github.com/miekg/dns">github.com/miekg/dns</a> en 
+	<a href="http://github.com/miekg/unbound">github.com/miekg/unbound</a>.
 	</dd>
 	</dl>
 	</div>
@@ -287,7 +333,8 @@ kunt controleren.
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/check/{domain}", checkHandler)
+	router.HandleFunc("/check/{domain}", checkHandler)            // ReST check a domain
+	router.HandleFunc("/check/{domain}/{type}", checkHandlerType) // ReST check a domain with a type
 	router.HandleFunc("/upload", parseHandlerCSV)
 	router.HandleFunc("/form", form)
 	http.Handle("/", router)
