@@ -76,6 +76,7 @@ func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
 	}
 	dnstype := dns.TypeNS
 	r.typ = "NS"
+	typ = strings.ToUpper(typ)
 	if v, ok := TYPES[typ]; ok {
 		dnstype = v
 		r.typ = typ
