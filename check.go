@@ -7,6 +7,7 @@ import (
 	"github.com/miekg/dns"
 	"github.com/miekg/unbound"
 	"log"
+	"log/syslog"
 	"net/http"
 	"sort"
 	"strings"
@@ -14,6 +15,8 @@ import (
 
 var TYPES = map[string]uint16{"SOA": dns.TypeSOA, "A": dns.TypeA, "NS": dns.TypeNS, "MX": dns.TypeMX, "TXT": dns.TypeTXT,
 	"AAAA": dns.TypeAAAA, "SRV": dns.TypeSRV, "DS": dns.TypeDS, "DNSKEY": dns.TypeDNSKEY}
+
+var lg *log.Logger
 
 const LIMIT = 10000
 
@@ -70,7 +73,7 @@ func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
 	zone = strings.TrimSpace(zone)
 	r := new(result)
 	r.name = zone
-	log.Printf("checking %s %s\n", zone, typ)
+	lg.Printf("checking %s %s\n", zone, typ)
 	if zone == "" {
 		return r
 	}
@@ -102,7 +105,7 @@ func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
 
 // ReST check
 func checkHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("RESTful request from %s\n", r.RemoteAddr)
+	lg.Printf("RESTful request from %s\n", r.RemoteAddr)
 
 	vars := mux.Vars(r)
 	zone := vars["domain"]
@@ -112,15 +115,15 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	result := unboundcheck(u, zone, "NS")
 	o := csv.NewWriter(w)
 	if e := o.Write(result.serialize()); e != nil {
-		log.Printf("Failed to write csv: %s\n", e.Error())
+		lg.Printf("Failed to write csv: %s\n", e.Error())
 	}
-	log.Printf("%v from %s\n", result, r.RemoteAddr)
+	lg.Printf("%v from %s\n", result, r.RemoteAddr)
 	o.Flush()
 }
 
 // ReST check with a type (copied checkHandler because the functions are small)
 func checkHandlerType(w http.ResponseWriter, r *http.Request) {
-	log.Printf("RESTful request from %s\n", r.RemoteAddr)
+	lg.Printf("RESTful request from %s\n", r.RemoteAddr)
 
 	vars := mux.Vars(r)
 	zone := vars["domain"]
@@ -131,18 +134,18 @@ func checkHandlerType(w http.ResponseWriter, r *http.Request) {
 	result := unboundcheck(u, zone, typ)
 	o := csv.NewWriter(w)
 	if e := o.Write(result.serialize()); e != nil {
-		log.Printf("Failed to write csv: %s\n", e.Error())
+		lg.Printf("Failed to write csv: %s\n", e.Error())
 	}
-	log.Printf("%v from %s\n", result, r.RemoteAddr)
+	lg.Printf("%v from %s\n", result, r.RemoteAddr)
 	o.Flush()
 }
 
 func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Upload request from %s\n", r.RemoteAddr)
+	lg.Printf("Upload request from %s\n", r.RemoteAddr)
 
 	f, _, err := r.FormFile("domainlist")
 	if err != nil {
-		log.Printf("Error opening CSV: %s\n", err.Error())
+		lg.Printf("Error opening CSV: %s\n", err.Error())
 		fmt.Fprintf(w, "Error opening CSV: %s\n", err.Error())
 		return
 	}
@@ -156,7 +159,7 @@ func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 	all := NewAllResults()
 	i := 0
 	if err != nil {
-		log.Printf("Malformed CSV: %s ", err.Error())
+		lg.Printf("Malformed CSV: %s ", err.Error())
 		fmt.Fprintf(w, "Malformed CSV: %s\n", err.Error())
 		return
 
@@ -165,12 +168,12 @@ Check:
 	for err == nil {
 		for _, r1 := range record {
 			result := unboundcheck(u, r1, "NS")
-			log.Printf("%v from %s\n", result, r.RemoteAddr)
+			lg.Printf("%v from %s\n", result, r.RemoteAddr)
 			all.Append(result)
 			i++
 			if i > LIMIT {
 				// Nu is het zat...!
-				log.Printf("limit seen")
+				lg.Printf("limit seen")
 				break Check
 			}
 		}
@@ -179,7 +182,7 @@ Check:
 	sort.Sort(all)
 	for _, r := range all.r {
 		if e := o.Write(r.serialize()); e != nil {
-			log.Printf("Failed to write csv: %s\n", e.Error())
+			lg.Printf("Failed to write csv: %s\n", e.Error())
 		}
 		o.Flush()
 	}
@@ -332,6 +335,11 @@ kunt controleren.
 }
 
 func main() {
+	var err error
+	lg, err = syslog.NewLogger(syslog.LOG_INFO, log.LstdFlags)
+	if err != nil {
+		log.Fatal("NewLogger: ", err)
+	}
 	router := mux.NewRouter()
 	router.HandleFunc("/check/{domain}", checkHandler)            // ReST check a domain
 	router.HandleFunc("/check/{domain}/{type}", checkHandlerType) // ReST check a domain with a type
