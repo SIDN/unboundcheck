@@ -1,9 +1,9 @@
 package main
 
 import (
-	"code.google.com/p/gorilla/mux"
 	"encoding/csv"
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/miekg/dns"
 	"github.com/miekg/unbound"
 	"log"
