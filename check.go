@@ -197,7 +197,7 @@ func form(w http.ResponseWriter, r *http.Request) {
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>SIDN Labs Portfolio Checker</title>
 	<link rel="shortcut icon" type="image/x-icon" href="http://sidnlabs.nl/favicon.ico">
-	<link href="http://www.sidnlabs.nl/fileadmin/sidnlabs/css/all.css?1359482022" rel="stylesheet" charset="utf-8" type="text/css">
+	<link href="http://www.sidnlabs.nl/fileadmin/templates/sidnlabs/css/all.css?1359482022" rel="stylesheet" charset="utf-8" type="text/css">
 	<style type="text/css" media="screen">
 .portfolio {
 	margin-left: 20%;
@@ -212,10 +212,13 @@ dt {
 	<body>
 	<div id="header">
 		<div class="holder">
-			<div class="logolink"><h1 class="logo"><a href="http://sidnlabs.nl">SIDN Labs Internet Research & Inovation</a></h1></div><div class="navigation"><ul id="nav"><li>
-			<a href="http://www.sidnlabs.nl/over-sidn-labs/" onfocus="blurLink(this)">OVER SIDN LABS</a></li>
-			li><a href="http://www.sidnlabs.nl/publicaties" onfocus="blurLink(this)">PUBLICATIES</a></li>
-			<li><a href="http://www.sidnlabs.nl/software-en-tools/" onfocus="blurLink(this)">SOFTWARE EN TOOLS</a></li> </ul></div>
+			<div class="logolink"><h1 class="logo"><a href="http://sidnlabs.nl">SIDN Labs Internet Research & Inovation</a></h1></div><div class="navigation">
+			<ul id="nav">
+			<li><a href="http://www.sidnlabs.nl/" onfocus="blurLink(this)">HOME</a></li>
+			<li><a href="http://www.sidnlabs.nl/over-sidn-labs/" onfocus="blurLink(this)">OVER SIDN LABS</a></li>
+			<li><a href="http://www.sidnlabs.nl/publicaties" onfocus="blurLink(this)">PUBLICATIES</a></li>
+			<li><a href="http://www.sidnlabs.nl/software-en-tools/" onfocus="blurLink(this)">SOFTWARE EN TOOLS</a></li>
+			</ul></div>
 		</div>
 	</div>
 	<div id="wrapper">
