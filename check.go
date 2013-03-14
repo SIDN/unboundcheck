@@ -301,7 +301,7 @@ kunt controleren.
 	<a href="http://check.sidnlabs.nl:8080/check/">check.sidnlabs.nl:8080/check/domeinnaam/type</a>
 	</p>
 	Bv: 
-	<a href="http://check.sidnlabs.nl:8080/check/example.nl">check.sidnlabs.nl:8080/check/example.nl/SOA</a>
+	<a href="http://check.sidnlabs.nl:8080/check/example.nl/SOA">check.sidnlabs.nl:8080/check/example.nl/SOA</a>
 	<p>
 	De lijst van DNS types die gebruikt kunnen worden is: SOA, A, NS, MX, TXT, AAAA, SRV, DS en DNSKEY .
 	De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV).
