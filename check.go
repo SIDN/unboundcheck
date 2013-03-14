@@ -324,7 +324,7 @@ kunt controleren.
 	<div class="pagetitle"><h2>Disclaimer</h2></div>
 	<p>
 	Dit is beta software! De software wordt <em>expliciet</em> niet ondersteund door SIDN, maar door SIDN Labs. 
-	Neem bij problemen met het gebruik van deze software contact op met miek.gieben@sidn.nl of @miekg op twitter.
+	Neem bij problemen met het gebruik van deze software contact op met SIDN Labs via: <a href="http://www.sidnlabs.nl/over-sidn-labs/contact/">onze contactpagina</a>.
 	</p>
 	<p>
 	SIDN zal de Portfolio Checker zelf gebruiken
