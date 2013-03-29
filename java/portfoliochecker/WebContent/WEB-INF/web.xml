@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <servlet-name>Jersey Servlet</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <init-param>
+      <param-name>com.sun.jersey.config.property.packages</param-name>
+      <param-value>nl.sidn.portfoliochecker.rest.resource</param-value>
+    </init-param>
+  </servlet>
+  <servlet>
+    <servlet-name>Uploader Servlet</servlet-name>
+    <servlet-class>nl.sidn.portfoliochecker.servlet.UploaderServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>Uploader Servlet</servlet-name>
+    <url-pattern>/upload</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>Jersey Servlet</servlet-name>
+    <url-pattern>/check/*</url-pattern>
+  </servlet-mapping>
+</web-app>

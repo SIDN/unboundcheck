@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Portfolio checker</title>
+	<link rel="shortcut icon" type="image/x-icon" href="http://sidnlabs.nl/favicon.ico">
+	<link href="http://www.sidnlabs.nl/fileadmin/sidnlabs/css/all.css" rel="stylesheet" type="text/css"/>
+	<style type="text/css" media="screen">
+.portfolio {
+	margin-left: auto;
+	margin-right; auto;
+	width: 80%;
+}
+dt {
+	font-weight: bold;
+}
+	</style>
+	</head>
+	<body>
+	<div id="header">
+		<div class="holder">
+			<div class="logolink"><h1 class="logo"><a href="http://sidnlabs.nl">SIDN Labs een kijkje achter de schermen</a></h1></div>
+			<div class="navigation"><ul id="nav"><li><a href="http://www.sidnlabs.nl/over-sidn-labs/" onfocus="blurLink(this)">OVER SIDN LABS</a></li><li><a href="http://www.sidnlabs.nl/contact/" onfocus="blurLink(this)">CONTACT</a></li><li><a href="http://www.werkenbijsidn.nl/" onfocus="blurLink(this)">WERKEN BIJ SIDN</a></li><li><a href="http://www.sidn.nl" onfocus="blurLink(this)">NAAR SIDN.NL</a></li></ul></div>
+		</div>
+	</div>
+	<div id="wrapper">
+	<div id="canvas">
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<div class="portfolio">
+	<div class="pagetitle"><h1>SIDN Labs: Portfolio checker</h1></div>
+	<p>&nbsp;</p>
+	</div>
+
+	<div class="portfolio">
+	<div class="pagetitle"><h2>Selecteer een <em>CSV</em> bestand met domein namen</h2></div>
+	<p> 
+	<form action="/portfoliochecker/upload" method="POST" enctype="multipart/form-data">
+	<input type="file" name="domainlist">
+	<input type="submit" value="Controleer">
+	</form>
+	<p>
+	</div>
+
+	<div class="portfolio">
+	<div class="pagetitle"><h2>FAQ</h2></div>
+	<dl>
+	<dt>Hoe wordt er gecontroleeerd?</dt>
+	<dd>U uploadt een CSV bestand met domein namen. Alle namen worden gecontroleerd, dus ook niet-.nl domein namen.
+	<p>
+	Er wordt een secure lookup via Unbound uitgevoerd. Er zal dus een <em>willekeurige</em> selectie van nameservers
+	plaatsvinden en is er is geen garantie dat al uw slaves nameservers worden gecheckt.
+	</p>
+	</dd>
+	
+	<dt>Hoe ziet de uitvoer eruit?</dt>
+	<dd>De uitvoer van deze check is:
+		<p>
+		<code>
+			domeinnaam, DNS error, security status, uitgebreide error als bogus
+		</code>
+		</p>
+	
+
+	De security status kan zijn
+	<ul>
+	<li><b>secure</b>: de domein naam is correct beveiligd met DNSSEC</li>
+	<li><b>bogus</b>: de domein naam is <em>niet</em> correct beveiligd met DNSSEC</li>
+	<li><b>insecure</b>: de domein naam is niet beveiligd met DNSSEC</li>
+
+	</ul>
+	<p>
+	De DNS error als Unbound geen informatie kan vinden in het DNS, er zal hier dan de
+	string <b>nodata</b> worden weergegeven.<br/>
+	De uitvoer is gesorteerd op de security status, dus alle <em>b</em>ogus domeinen komen vooraan te staan.
+
+	</dd>
+
+	<dt>Kan er ook een enkele domein naam worden gecontroleerd?</dt>
+	<dd>Uiteraard is dat mogelijk door een bestand te uploaden dat maar 1 domein naam bevat. Of u kunt
+	de volgende URL gebruiken die een RESTful-achtige interface aanbiedt.
+	
+	Bijvoorbeeld: <a href="/portfoliochecker/check/example.nl">/portfoliochecker/check/example.nl</a>
+	<p>
+	De uitvoer daarvan is gelijk aan de portfolio-check uitvoer (CSV).
+	</p>
+	</dd>
+	<dt>Welke software wordt gebruikt?</dt>
+	<dd>
+	Deze portfolio-check gebruikt:
+	<ul>
+		<li>Libunbound van <a href="http://www.nlnetlabs.nl">NLnet Labs</a></li>
+		<li>Java 7</li>
+		<li>Apache Tomcat</li>
+	</ul>
+	</dl>
+	</div>
+
+	<div class="portfolio">
+	<div class="pagetitle"><h2>Disclaimer</h2></div>
+	Dit is beta software! Neem bij problemen met het gebruikt van deze software contact op met maarten.wullink at sidn.nl .
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	</div>
+
+	</div> <!-- canvas -->
+	</div> <!-- wrapper -->
+	</body>
+</html>

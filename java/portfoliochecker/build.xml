@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="dns-lg" default="copylibs" basedir=".">
+
+<target name="copylibs" description="--> retrieve dependencies with ivy">
+    <ivy:retrieve conf="webinf" pattern="WebContent/WEB-INF/lib/[artifact].[ext]"/>
+</target>
+
+</project>
