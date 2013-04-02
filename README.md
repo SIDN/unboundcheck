@@ -3,6 +3,7 @@
 ##Go
 
 A Go program that checks a list of domain name for (DNSSEC) resolving errors.
+Demonstration: http://check.sidnlabs.nl:8080/form
 
 ##Java
 A Java web application which is tested with Tomcat 7.
