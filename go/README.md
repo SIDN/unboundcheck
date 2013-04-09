@@ -9,7 +9,7 @@ Quick install:
 - sudo go build github.com/SIDN/unboundcheck/go
 - sudo mkdir /home/unbouncheck
 - sudo cp go /home/unboundcheck/gocheck
-  (perhaps set some ownerships)
+  (perhaps set some ownerships and 'strip' it)
 - place script below in /etc/init named gocheck.conf
   (probably needs some adjustments first)
 - sudo start gocheck
