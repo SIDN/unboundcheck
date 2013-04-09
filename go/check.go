@@ -287,9 +287,9 @@ kunt controleren.
 	<dd>Uiteraard is dat mogelijk door een bestand te uploaden dat maar 1 domein naam bevat. Of je kunt
 	de volgende URL gebruiken die een RESTful-achtige interface aanbiedt:
 	<p>
-	<a href="http://check.sidnlabs.nl:8080/check/">check.sidnlabs.nl:8080/check/domeinnaam</a>
+	http://check.sidnlabs.nl:8080/check/domeinnaam.nl
 	</p>
-	Bv: 
+	Bijvoorbeeld: 
 	<a href="http://check.sidnlabs.nl:8080/check/example.nl">check.sidnlabs.nl:8080/check/example.nl</a>
 	<p>
 	Ook hier wordt om de NS records gevraagd. De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV).
@@ -298,9 +298,9 @@ kunt controleren.
 	Optioneel kan aan de RESTful interface ook een DNS type worden meegeven, zodat er om iets anders gevraagd wordt
 	dan een NS record. Die interface werkt als volgt:
 	<p>
-	<a href="http://check.sidnlabs.nl:8080/check/">check.sidnlabs.nl:8080/check/domeinnaam/type</a>
+	http://check.sidnlabs.nl:8080/check/domeinnaam.nl/RRtype
 	</p>
-	Bv: 
+	Bijvoorbeeld: 
 	<a href="http://check.sidnlabs.nl:8080/check/example.nl/SOA">check.sidnlabs.nl:8080/check/example.nl/SOA</a>
 	<p>
 	De lijst van DNS types die gebruikt kunnen worden is: SOA, A, NS, MX, TXT, AAAA, SRV, DS en DNSKEY .
