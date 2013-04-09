@@ -17,7 +17,11 @@ Quick install:
 
 Have fun!
 
-Known users:
+Working demo:
+
+http://check.sidnlabs.nl:8080/form
+
+Known (other) users:
 
 http://www.phishingscorecard.com/
 
