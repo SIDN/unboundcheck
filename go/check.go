@@ -124,6 +124,7 @@ var errstr string;
 			}
 			r.err = fmt.Sprintf("nodata%s", errstr)
 	}
+	
 	return r
 }
 
@@ -136,7 +137,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 	u := unbound.New()
 	defer u.Destroy()
 	setupUnbound(u)
-	result := unboundcheck(u, zone, "NS")
+	result := unboundcheck(u, zone, "A") 
 	o := csv.NewWriter(w)
 	if e := o.Write(result.serialize()); e != nil {
 		lg.Printf("Failed to write csv: %s\n", e.Error())
@@ -189,6 +190,7 @@ func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
 
 	}
 Check:
+
 	for err == nil {
 		for _, r1 := range record {
 			result := unboundcheck(u, r1, "NS")
@@ -196,7 +198,7 @@ Check:
 			all.Append(result)
 			i++
 			if i > LIMIT {
-				// Nu is het zat...!
+				// That's enough...!
 				lg.Printf("limit seen")
 				break Check
 			}
@@ -279,9 +281,11 @@ kunt controleren.
 	<dd>Je uploadt een CSV bestand met domein namen. Alle namen worden gecontroleerd, dus ook niet-.nl domein namen. Er is een
 	limiet ingesteld van 10000 domein namen (per run).
 	<p/>
-	Er wordt een secure lookup via <a href="http://www.unbound.net">Unbound</a> uitgevoerd. De query zelf vraagt om NS records.
-	Er zal een <em>willekeurige</em> selectie van nameservers
-	plaatsvinden. Er is geen garantie dat al je slave nameservers worden gecheckt.</dd>
+	Er wordt per domeinnaam een DNSSEC-validatie via <a href="http://www.unbound.net">Unbound</a> uitgevoerd.
+	De DNS-query vraagt om 'NS'-records. Er zal een <em>willekeurige</em> selectie van nameservers
+	plaatsvinden. Er is geen garantie dat al je slave nameservers worden gecheckt. Als er geen NS-records
+	zijn, levert dit een 'nodata'-antwoord op.
+	</dd>
 
 	<dt>Hoe ziet de uitvoer eruit?</dt>
 	<dd>De uitvoer van deze check is:
@@ -299,36 +303,36 @@ kunt controleren.
 	</ul>
 	<p>
 	Er kunnen legio oorzaken zijn als een domein <em>bogus</em> is. De error text van Unbound is
-	over het algemeen heel leesbaar.
+	bedoeld om hierover opheldering te verschaffen.
 	<p/>
-	De DNS error is <b>nodata</b> als Unbound geen informatie kan vinden in het DNS.
+	De DNS-error is <b>nodata</b> als Unbound de gevraagde informatie (bijvoorbeeld NS records) niet kan vinden in het DNS.
 	<p/>
 	De uitvoer is gesorteerd op de security status, dus alle <em>b</em>ogus domeinen komen vooraan te staan.
 
 	</dd>
 
 	<dt>Kan er ook een enkele domein naam worden gecontroleerd?</dt>
-	<dd>Uiteraard is dat mogelijk door een bestand te uploaden dat maar 1 domein naam bevat. Of je kunt
+	<dd>Uiteraard is dat mogelijk door een bestand te uploaden dat maar &eacute;&eacute;n domein naam bevat. Of je kunt
 	de volgende URL gebruiken die een RESTful-achtige interface aanbiedt:
 	<p>
-	http://check.sidnlabs.nl:8080/check/domeinnaam.nl
+	http://check.sidnlabs.nl:8080/check/www.domeinnaam.nl
 	</p>
 	Bijvoorbeeld: 
-	<a href="check/example.nl">check.sidnlabs.nl:8080/check/example.nl</a>
+	<a href="check/example.nl">check.sidnlabs.nl:8080/check/www.example.nl</a>
 	<p>
-	Ook hier wordt om de NS records gevraagd. De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV).
+	LET OP: hier wordt om 'A'-records gevraagd. De uitvoer is gelijk aan de Portfolio-Checker uitvoer (CSV).
 	</p>
 	<p>
-	Optioneel kan aan de RESTful interface ook een DNS type worden meegeven, zodat er om iets anders gevraagd wordt
-	dan een NS record. Die interface werkt als volgt:
+	Optioneel kan aan de RESTful interface ook een DNS recordtype worden meegeven, zodat er om iets anders gevraagd wordt
+	dan een A record. Die interface werkt als volgt:
 	<p>
 	http://check.sidnlabs.nl:8080/check/domeinnaam.nl/RRtype
 	</p>
 	Bijvoorbeeld: 
-	<a href="check/example.nl/SOA">check.sidnlabs.nl:8080/check/example.nl/SOA</a>
+	<a href="check/example.nl/SOA">check.sidnlabs.nl:8080/check/example.nl/TXT</a>
 	<p>
 	De lijst van DNS types die gebruikt kunnen worden is: SOA, A, NS, MX, TXT, AAAA, SRV, DS en DNSKEY .
-	De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV).
+	De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV),
 	</p>
 
 	<dt>Welke software wordt gebruikt?</dt>
@@ -347,13 +351,16 @@ kunt controleren.
 	<div class="portfolio">
 	<div class="pagetitle"><h2>Disclaimer</h2></div>
 	<p>
-	Dit is beta software! De software wordt <em>expliciet</em> niet ondersteund door SIDN, maar door SIDN Labs. 
+	Dit is beta software! De software wordt <em>expliciet</em> niet ondersteund door SIDN, maar door SIDN Labs.
+	De uitvoer kan op enig moment veranderen. Dus het advies is om voor belangrijk eigen gebruik, zelf de code
+	te compileren en deze tool op een eigen systeem te draaien. Eenvoudige installatie-instructies staan op
+	<a href="http://github.com/SIDN/unboundcheck">GitHub</a>.
+
 	Neem bij problemen met het gebruik van deze software contact op met SIDN Labs via: <a href="http://www.sidnlabs.nl/over-sidn-labs/contact/">onze contactpagina</a>.
 	</p>
 	<p>
-	SIDN zal de Portfolio Checker zelf gebruiken
-	voor statistische doeleinden (% errors in de .nl-zone, etc.), maar geen data
-	publiceren over individuele domeinnamen of registrars.
+	SIDN kan de Portfolio Checker zelf gebruiken voor statistische doeleinden (% errors in de .nl-zone, etc.), maar zal geen data
+	publiceren over registrars.
 	</p>
 	<p>&nbsp;</p>
 	</div>
@@ -384,6 +391,7 @@ func main() {
 }
 
 // Setup the resolver and add the root's trust anchor
+// This one is used for RESTful lookups - they contain detailed errors
 func setupUnbound(u *unbound.Unbound) {
 	u.ResolvConf("/etc/resolv.conf")
 	u.AddTa(`;; ANSWER SECTION:
