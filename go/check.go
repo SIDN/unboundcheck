@@ -393,7 +393,7 @@ func main() {
 // Setup the resolver and add the root's trust anchor
 // This one is used for RESTful lookups - they contain detailed errors
 func setupUnbound(u *unbound.Unbound) {
-	u.ResolvConf("/etc/resolv.conf")
+//	u.ResolvConf("/etc/resolv.conf")
 	u.AddTa(`;; ANSWER SECTION:
 .                       168307 IN DNSKEY 257 3 8 (
                                 AwEAAagAIKlVZrpC6Ia7gEzahOR+9W29euxhJhVVLOyQ
