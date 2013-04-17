@@ -70,6 +70,8 @@ func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
+var errstr string;
+
 	zone = strings.TrimSpace(zone)
 	r := new(result)
 	r.name = zone
@@ -89,7 +91,24 @@ func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
 		r.err = err.Error()
 		return r
 	}
-	if res.HaveData {
+
+	if res.Rcode==0 {
+		errstr=""
+	} else {
+		if res.Rcode==2 {
+			errstr="(servfail)"
+		} else {
+			if res.Rcode==3 {
+				errstr="(nxdomain)"
+			} else {
+				errstr=fmt.Sprintf("(rcode: %d)", res.Rcode)
+			}
+		}
+	} 
+
+	r.err = errstr
+
+	if res.HaveData || res.NxDomain {
 		if res.Secure {
 			r.status = "secure"
 		} else if res.Bogus {
@@ -99,7 +118,11 @@ func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
 			r.status = "insecure"
 		}
 	} else {
-		r.err = "nodata"
+			// r.status = "n/a"
+			if errstr != "" {
+				errstr = " " + errstr
+			}
+			r.err = fmt.Sprintf("nodata%s", errstr)
 	}
 	return r
 }
@@ -228,20 +251,21 @@ dt {
 	<p>&nbsp;</p>
 	<div class="portfolio">
 	<div class="pagetitle"><h1>SIDN Labs Portfolio Checker</h1></div>
-	<p>&nbsp;</p>
+	<p>Versie 20130417</p>
+	<br />
 	</div>
 
 	<div class="portfolio">
 
 Als je een flink aantal domeinnamen hebt en je wilt deze beveiligen met <a href="http://www.dnssec.nl">DNSSEC</a>,
 dan bestaat altijd het gevaar dat je een paar details over het hoofd ziet en
-niet alle domeinen correct gesigned zijn. SIDN Labs heeft daarom de <a href="http://check.sidnlabs.nl:8080/form">DNSSEC
+niet alle domeinen correct gesigned zijn. SIDN Labs heeft daarom de <a href="form">DNSSEC
 Portfolio Checker</a> ontwikkeld, waarmee je dit op een snelle en eenvoudige manier
 kunt controleren.
 
 	<div class="pagetitle"><h2>Selecteer een <em>CSV</em> bestand met domeinnamen</h2></div>
 	
-	<form action="http://check.sidnlabs.nl:8080/upload" method="POST" enctype="multipart/form-data">
+	<form action="upload" method="POST" enctype="multipart/form-data">
 	<input type="file" name="domainlist">
 	<input type="submit" value="Controleer">
 	</form>
@@ -263,7 +287,7 @@ kunt controleren.
 	<dd>De uitvoer van deze check is:
 	<p>
 	<code>
-		domeinnaam, DNS error, security status, uitgebreide error als bogus
+		domeinnaam, DNS error, security status, uitgebreide error indien bogus
 	</code>
 	</p>
 
@@ -290,7 +314,7 @@ kunt controleren.
 	http://check.sidnlabs.nl:8080/check/domeinnaam.nl
 	</p>
 	Bijvoorbeeld: 
-	<a href="http://check.sidnlabs.nl:8080/check/example.nl">check.sidnlabs.nl:8080/check/example.nl</a>
+	<a href="check/example.nl">check.sidnlabs.nl:8080/check/example.nl</a>
 	<p>
 	Ook hier wordt om de NS records gevraagd. De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV).
 	</p>
@@ -301,7 +325,7 @@ kunt controleren.
 	http://check.sidnlabs.nl:8080/check/domeinnaam.nl/RRtype
 	</p>
 	Bijvoorbeeld: 
-	<a href="http://check.sidnlabs.nl:8080/check/example.nl/SOA">check.sidnlabs.nl:8080/check/example.nl/SOA</a>
+	<a href="check/example.nl/SOA">check.sidnlabs.nl:8080/check/example.nl/SOA</a>
 	<p>
 	De lijst van DNS types die gebruikt kunnen worden is: SOA, A, NS, MX, TXT, AAAA, SRV, DS en DNSKEY .
 	De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV).
