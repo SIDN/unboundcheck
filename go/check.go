@@ -70,7 +70,7 @@ func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
-var errstr string;
+var errstr string
 
 	zone = strings.TrimSpace(zone)
 	r := new(result)
