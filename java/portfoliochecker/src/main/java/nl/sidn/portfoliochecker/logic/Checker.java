@@ -3,10 +3,10 @@ package nl.sidn.portfoliochecker.logic;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.sidn.dnslib.logic.Context;
 import nl.sidn.dnslib.logic.LookupResult;
 import nl.sidn.dnslib.logic.Resolver;
-import nl.sidn.dnslib.logic.Resolver.DEBUGMODE;
-import nl.sidn.dnslib.types.RcodeType;
+import nl.sidn.dnslib.logic.ResolverContextBuilder;
 import nl.sidn.dnslib.types.ResourceRecordClass;
 import nl.sidn.dnslib.types.ResourceRecordType;
 
@@ -77,8 +77,12 @@ public class Checker {
 		if(type == null){
 			type = ResourceRecordType.NS;
 		}
-		Resolver r = new Resolver();
-		r.setDnsSecEnabled();
+
+		Context ctx = new ResolverContextBuilder().
+				withDnsSecEnabled().
+				build();
+		
+		Resolver r = new Resolver(ctx);
 		LookupResult result = r.lookup(StringUtils.trim(qName), type, ResourceRecordClass.IN, true);
 		
 		return createResultLine(result);
@@ -95,8 +99,13 @@ public class Checker {
 		List<String> results = new ArrayList<>();
 		
 		for (String domain : domains) {
-			Resolver r = new Resolver();
-			r.setDnsSecEnabled();
+			
+			Context ctx = new ResolverContextBuilder().
+					withDnsSecEnabled().
+					build();
+			
+			Resolver r = new Resolver(ctx);
+			
 			LookupResult result = r.lookup(StringUtils.trim(domain), ResourceRecordType.NS, ResourceRecordClass.IN, false);
 			
 			if(result.isBogus()){
