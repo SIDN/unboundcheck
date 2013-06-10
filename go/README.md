@@ -10,8 +10,8 @@ Quick install:
 - sudo mkdir /home/unbouncheck
 - sudo cp go /home/unboundcheck/gocheck
   (perhaps set some ownerships and 'strip' it)
-- place script below in /etc/init named gocheck.conf
-  (probably needs some adjustments first)
+- place portfolio.conf in /etc/init named as gocheck.conf
+  (may need some adjustments first, to suite your exact needs)
 - sudo start gocheck
 - Surf to http://yourserver:8080/form
 
