@@ -315,10 +315,10 @@ kunt controleren.
 	<dd>Uiteraard is dat mogelijk door een bestand te uploaden dat maar &eacute;&eacute;n domein naam bevat. Of je kunt
 	de volgende URL gebruiken die een RESTful-achtige interface aanbiedt:
 	<p>
-	http://check.sidnlabs.nl:8080/check/www.domeinnaam.nl
+	http://portfolio.sidnlabs.nl:8080/check/www.domeinnaam.nl
 	</p>
 	Bijvoorbeeld: 
-	<a href="check/example.nl">check.sidnlabs.nl:8080/check/www.example.nl</a>
+	<a href="check/example.nl">portfolio.sidnlabs.nl:8080/check/www.example.nl</a>
 	<p>
 	LET OP: hier wordt om 'A'-records gevraagd. De uitvoer is gelijk aan de Portfolio-Checker uitvoer (CSV).
 	</p>
@@ -326,10 +326,10 @@ kunt controleren.
 	Optioneel kan aan de RESTful interface ook een DNS recordtype worden meegeven, zodat er om iets anders gevraagd wordt
 	dan een A record. Die interface werkt als volgt:
 	<p>
-	http://check.sidnlabs.nl:8080/check/domeinnaam.nl/RRtype
+	http://portfolio.sidnlabs.nl:8080/check/domeinnaam.nl/RRtype
 	</p>
 	Bijvoorbeeld: 
-	<a href="check/example.nl/SOA">check.sidnlabs.nl:8080/check/example.nl/TXT</a>
+	<a href="check/example.nl/SOA">portfolio.sidnlabs.nl:8080/check/example.nl/TXT</a>
 	<p>
 	De lijst van DNS types die gebruikt kunnen worden is: SOA, A, NS, MX, TXT, AAAA, SRV, DS en DNSKEY .
 	De uitvoer daarvan is gelijk aan de Portfolio-Checker uitvoer (CSV),
