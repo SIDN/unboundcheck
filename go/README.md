@@ -19,7 +19,7 @@ Have fun!
 
 Working demo:
 
-http://check.sidnlabs.nl:8080/form
+http://portfolio.sidnlabs.nl:8080/form
 
 Known (other) users:
 
