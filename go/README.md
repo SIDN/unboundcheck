@@ -7,7 +7,7 @@ Quick install:
 - sudo apt-get install gcc
 - sudo go get github.com/SIDN/unboundcheck/go
 - sudo go build github.com/SIDN/unboundcheck/go
-- sudo mkdir /home/unbouncheck
+- sudo mkdir /home/unboundcheck
 - sudo cp go /home/unboundcheck/gocheck
   (perhaps set some ownerships and 'strip' it)
 - place portfolio.conf in /etc/init named as gocheck.conf
