@@ -221,7 +221,7 @@ func form(w http.ResponseWriter, r *http.Request) {
 <html class="no-js" lang="nl">
 
 <head>
-    <title>SIDN Labs: DNS Workbench</title>
+    <title>SIDN Labs: DNSSEC portfolio checker</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <!-- Twitter Card -->
@@ -250,24 +250,24 @@ func form(w http.ResponseWriter, r *http.Request) {
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link type="text/css" rel="stylesheet" href="//fast.fonts.net/cssapi/f726c309-8879-4771-b2c6-33d945a9911b.css" />
-    <link type="text/css" rel="stylesheet" href="//sidnlabs.nl/application/themes/sidn/assets/css/layout.css" />
-    <link rel="icon" type="image/png" href="//sidnlabs.nl/application/themes/sidn/assets/img/favicon.png" />
-    <link rel="apple-touch-icon" href="//sidnlabs.nl/application/themes/sidn/assets/img/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="//sidnlabs.nl/application/themes/sidn/assets/img/apple-touch-icon-76x76.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="//sidnlabs.nl/application/themes/sidn/assets/img/apple-touch-icon-120x120.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="//sidnlabs.nl/application/themes/sidn/assets/img/apple-touch-icon-152x152.png" />
-    <script type="text/javascript" src="//sidnlabs.nl/application/themes/sidn/assets/js/head.js"></script>
-    <script type="text/javascript" src="//sidnlabs.nl/application/themes/sidn/assets/js/galleria/galleria-1.4.2.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="//workbench.sidnlabs.nl/assets/css/layout.css" />
+    <link rel="icon" type="image/png" href="//workbench.sidnlabs.nl/assets/img/favicon.png" />
+    <link rel="apple-touch-icon" href="//workbench.sidnlabs.nl/assets/img/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="//workbench.sidnlabs.nl/assets/img/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="//workbench.sidnlabs.nl/assets/img/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="//workbench.sidnlabs.nl/assets/img/apple-touch-icon-152x152.png" />
+    <script type="text/javascript" src="//workbench.sidnlabs.nl/assets/js/head.js"></script>
+    <script type="text/javascript" src="//workbench.sidnlabs.nl/assets/js/galleria/galleria-1.4.2.min.js"></script>
 </head>
 
 <body class="labs">
-    <div id="og-linkedin"><img src="//sidnlabs.nl/application/themes/sidn/assets/img/og-image-linkedin.png" alt="" title="" /></div>
+    <div id="og-linkedin"><img src="//workbench.sidnlabs.nl/assets/img/og-image-linkedin.png" alt="" title="" /></div>
     <div class="navigation" id="nav">
         <div class="navigation-container">
             <div class="c">
                 <nav role="navigation">
                     <div class="logo">
-                        <a href="https://www.sidn.nl/"><img src="//sidnlabs.nl/application/themes/sidn/assets/img/logo-sidn-body.svg" alt="SIDN logo" title="" /></a>
+                        <a href="https://www.sidn.nl/"><img src="//workbench.sidnlabs.nl/assets/img/logo-sidn-body.svg" alt="SIDN logo" title="" /></a>
                     </div>
                     <div class="markers">
                         <a class="icon-nl-domain" id="marker-domain" href="https://www.sidn.nl/whois"></a>
@@ -349,7 +349,7 @@ func form(w http.ResponseWriter, r *http.Request) {
     <div class="page-content content">
         <nav class="sub-navigation">
             <div class="container">
-                <h1 class="sub-navigation__logo"><a href="https://www.sidn.nl/sidn-labs/"><img src="//sidnlabs.nl/application/themes/sidn/assets/img/logo-sidn-labs.png" alt="SIDN Labs"></a></h1>
+                <h1 class="sub-navigation__logo"><a href="https://www.sidn.nl/sidn-labs/"><img src="//workbench.sidnlabs.nl/assets/img/logo-sidn-labs.png" alt="SIDN Labs"></a></h1>
                 <ul class="sub-navigation__list">
                     <li class="sub-navigation__item">
                         <a class="sub-navigation__link" href="https://www.sidn.nl/sidn-labs/software-en-tools">Software en tools</a>
@@ -596,7 +596,7 @@ kunt controleren.
         </div>
         <div class="footer-org">
             <div class="container" itemscope="" itemtype="http://schema.org/Organization">
-                <meta itemprop="logo" content="//sidnlabs.nl/application/themes/sidn/assets/img/og-image.png" />
+                <meta itemprop="logo" content="//workbench.sidnlabs.nl/assets/img/og-image.png" />
                 <meta itemprop="telephone" content="+31263525500" />
                 <meta itemprop="name" content="Stichting Internet Domeinregistratie Nederland" />
                 <meta itemprop="alternateName" content="SIDN" />
@@ -620,7 +620,7 @@ kunt controleren.
             </div>
         </div>
     </footer>
-    <script type="text/javascript" src="//sidnlabs.nl/application/themes/sidn/assets/js/app.js"></script>
+    <script type="text/javascript" src="//workbench.sidnlabs.nl/assets/js/app.js"></script>
 </body>
 
 </html>
