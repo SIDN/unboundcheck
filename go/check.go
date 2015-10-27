@@ -214,43 +214,170 @@ Check:
 	}
 }
 
+
 func form(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>SIDN Labs Portfolio Checker</title>
-	<link rel="shortcut icon" type="image/x-icon" href="http://sidnlabs.nl/favicon.ico">
-	<link href="http://www.sidnlabs.nl/fileadmin/templates/sidnlabs/css/all.css?1359482022" rel="stylesheet" charset="utf-8" type="text/css">
-	<style type="text/css" media="screen">
-.portfolio {
-	margin-left: 20%;
-	margin-right; 20%;
-	width: 60%;
-}
-dt {
-	font-weight: bold;
-}
-	</style>
-	</head>
-	<body>
-	<div id="header">
-		<div class="holder">
-			<div class="logolink"><h1 class="logo"><a href="http://sidnlabs.nl">SIDN Labs Internet Research & Inovation</a></h1></div><div class="navigation">
-			<ul id="nav">
-			<li><a href="http://www.sidnlabs.nl/" onfocus="blurLink(this)">HOME</a></li>
-			<li><a href="http://www.sidnlabs.nl/over-sidn-labs/" onfocus="blurLink(this)">OVER SIDN LABS</a></li>
-			<li><a href="http://www.sidnlabs.nl/publicaties" onfocus="blurLink(this)">PUBLICATIES</a></li>
-			<li><a href="http://www.sidnlabs.nl/software-en-tools/" onfocus="blurLink(this)">SOFTWARE EN TOOLS</a></li>
-			</ul></div>
-		</div>
-	</div>
-	<div id="wrapper">
-	<div id="canvas">
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
+<!DOCTYPE html>
+<html class="no-js" lang="nl">
+
+<head>
+    <title>SIDN Labs: DNS Workbench</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:description" content="Lees meer op sidn.nl" />
+    <meta name="twitter:image" content="https://www.sidn.nl/assets/img/og-image.jpg" />
+    <meta name="twitter:site" content="@sidn" />
+    <meta name="twitter:title" content="SIDN : Homepage" />
+    <meta name="twitter:url" content="https://www.sidn.nl/sidn-labs/" />
+    <meta name="keywords" content="" />
+    <script>
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-52545763-6', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link type="text/css" rel="stylesheet" href="//fast.fonts.net/cssapi/f726c309-8879-4771-b2c6-33d945a9911b.css" />
+    <link type="text/css" rel="stylesheet" href="//sidnlabs.nl/application/themes/sidn/assets/css/layout.css" />
+    <link rel="icon" type="image/png" href="//sidnlabs.nl/application/themes/sidn/assets/img/favicon.png" />
+    <link rel="apple-touch-icon" href="//sidnlabs.nl/application/themes/sidn/assets/img/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="//sidnlabs.nl/application/themes/sidn/assets/img/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="//sidnlabs.nl/application/themes/sidn/assets/img/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="//sidnlabs.nl/application/themes/sidn/assets/img/apple-touch-icon-152x152.png" />
+    <script type="text/javascript" src="//sidnlabs.nl/application/themes/sidn/assets/js/head.js"></script>
+    <script type="text/javascript" src="//sidnlabs.nl/application/themes/sidn/assets/js/galleria/galleria-1.4.2.min.js"></script>
+</head>
+
+<body class="labs">
+    <div id="og-linkedin"><img src="//sidnlabs.nl/application/themes/sidn/assets/img/og-image-linkedin.png" alt="" title="" /></div>
+    <div class="navigation" id="nav">
+        <div class="navigation-container">
+            <div class="c">
+                <nav role="navigation">
+                    <div class="logo">
+                        <a href="https://www.sidn.nl/"><img src="//sidnlabs.nl/application/themes/sidn/assets/img/logo-sidn-body.svg" alt="SIDN logo" title="" /></a>
+                    </div>
+                    <div class="markers">
+                        <a class="icon-nl-domain" id="marker-domain" href="https://www.sidn.nl/whois"></a>
+                        <a class="icon-search" id="marker-search" href="https://www.sidn.nl/zoeken/"><span>Zoeken</span></a>
+                        <a class="icon-list" id="marker-nav"></a>
+                    </div>
+                    <div class="navigation-lists" id="nav-lists">
+                        <div class="navigation-main">
+                            <ul>
+                                <li>
+                                    <a href="https://www.sidn.nl/t/nl-domeinnaam">.nl-domeinnaam</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.sidn.nl/t/diensten">Diensten</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.sidn.nl/t/veilig-internet">Veilig internet</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.sidn.nl/t/kennis-en-ontwikkeling">Kennis en ontwikkeling</a>
+                                </li>
+                                <li class="active">
+                                    <a href="https://www.sidn.nl/sidn-labs/">SIDN Labs</a>
+                                </li>
+                                <li>
+                                    <a href="https://www.sidn.nl/t/over-sidn">Over SIDN</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="navigation-related">
+                            <ul>
+                                <li><a href="https://www.sidn.nl/faq/">Veelgestelde vragen</a></li>
+                                <li><a href="https://registrars-dev.cloud.usmedia.nl?language_id=1">Login registrars</a></li>
+                                <li class="language-switch">
+                                    <span>NL</span> / <a href="https://www.sidn.nl/sidn-labs/index?language_id=2">EN</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="search" id="site-search">
+            <div class="c">
+                <form action="/search" method="get" class="search-form" id="site-search-form">
+                    <fieldset>
+                        <legend>Zoek in sidn.nl</legend>
+                        <div class="search-wrapper">
+                            <i class="icon-search"></i>
+                            <input type="search" placeholder="Zoek in sidn.nl" name="q" id="site-search-input" value="" />
+                            <button type="submit">
+                                <span>Zoek</span>
+                            </button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="domain-search" id="domain-search">
+            <div class="domain-search-container">
+                <div class="c">
+                    <form method="get" action="./whois" class="domain-search-form" id="domain-search-form">
+                        <fieldset>
+                            <legend>whois.label.legend</legend>
+                            <div class="search-wrapper">
+                                <i class="icon-nl-domain"></i>
+                                <input id="domain-search-input" autocomplete="off" type="search" name="q" placeholder="Check hier uw .nl-domeinnaam" value="" /><!--
+                             --><button type="submit">
+                                    <span>ok</span>
+                                </button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="domain-hook"></div>
+    <div class="page-content content">
+        <nav class="sub-navigation">
+            <div class="container">
+                <h1 class="sub-navigation__logo"><a href="https://www.sidn.nl/sidn-labs/"><img src="//sidnlabs.nl/application/themes/sidn/assets/img/logo-sidn-labs.png" alt="SIDN Labs"></a></h1>
+                <ul class="sub-navigation__list">
+                    <li class="sub-navigation__item">
+                        <a class="sub-navigation__link" href="https://www.sidn.nl/sidn-labs/software-en-tools">Software en tools</a>
+                    </li>
+                    <li class="sub-navigation__item">
+                        <a class="sub-navigation__link" href="https://www.sidn.nl/sidn-labs/publicaties">Publicaties</a>
+                    </li>
+                    <li class="sub-navigation__item">
+                        <a class="sub-navigation__link" href="https://stats.sidnlabs.nl">Statistieken</a>
+                    </li>
+                    <li class="sub-navigation__item">
+                        <a class="sub-navigation__link" href="https://www.sidn.nl/sidn-labs/projecten">Projecten</a>
+                    </li>
+                    <li class="sub-navigation__item">
+                        <a class="sub-navigation__link" href="https://www.sidn.nl/sidn-labs/over-labs">Over SIDN Labs</a>
+                    </li>
+                </ul>
+                <ul class="client-info">
+                    <li class="client-info__item"><a href="https://github.com/SIDN"><i class="icon icon-github4"></i></a></li>
+                    <li class="client-info__item" id="sidn_ipv6_check"></li>
+                    <li class="client-info__item" id="sidn_dnssec_check"></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="dotcms-row">
+            <div class="dotcms-column">
+            <!-- content starts here -->
+
 	<div class="portfolio">
 	<div class="pagetitle"><h1>SIDN Labs Portfolio Checker</h1></div>
 	<p>Versie 20130417</p>
@@ -365,10 +492,139 @@ kunt controleren.
 	<p>&nbsp;</p>
 	</div>
 
-	</div> <!-- canvas -->
-	</div> <!-- wrapper -->
-	</body>
-</html>`)
+            <!-- content ends here -->
+            </div>
+        </div>
+    </div>
+    <!-- /container-->
+    <footer>
+        <div class="page-footer">
+            <div class="container">
+                <nav>
+                    <div class="sitemap">
+                        <section>
+                            <h1>
+                            <a href="https://www.sidn.nl/t/nl-domeinnaam">.nl-domeinnaam</a>
+                    </h1>
+                            <ul>
+                                <li><a href="https://www.sidn.nl/t/nl-domeinnaam#category-dcef45d7-3ea0-41a2-a6bb-25983546eaaf">Domeinnaam uitgelegd</a></li>
+                                <li><a href="https://www.sidn.nl/t/nl-domeinnaam#category-33dd40e2-ff5d-4192-b7d0-5659616dc4e0">Domeinnaam zoeken</a></li>
+                                <li><a href="https://www.sidn.nl/t/nl-domeinnaam#category-4f128bd5-7fc4-4eaa-9d36-fa101f30efe8">Domeinnaam registreren</a></li>
+                                <li><a href="https://www.sidn.nl/t/nl-domeinnaam#category-0b6735e5-e92a-43e9-834d-ae3291172786">Domeinnaam aanpassen</a></li>
+                                <li><a href="https://www.sidn.nl/t/nl-domeinnaam#category-5f8abfe9-3a81-4edf-a913-44b39f0ca76e">Registrar zoeken</a></li>
+                                <li><a href="https://www.sidn.nl/t/nl-domeinnaam#category-b5f5efe6-7c3e-4b63-9a8e-b982bd829cf3">Registrar worden</a></li>
+                                <li><a href="https://www.sidn.nl/t/nl-domeinnaam#category-6bad0d84-0b1b-41fd-948d-3f0ba9a1c86a">Klacht of geschil over domeinnaam</a></li>
+                            </ul>
+                        </section>
+                        <section>
+                            <h1>
+                            <a href="https://www.sidn.nl/t/diensten">Diensten</a>
+                    </h1>
+                            <ul>
+                                <li><a href="https://www.sidn.nl/t/diensten#category-8f9ae076-f148-4a1d-8848-81753eb336d0">Domeinnaam&shy;bewakingsservice</a></li>
+                                <li><a href="https://www.sidn.nl/t/diensten#category-a05a6553-0a14-4806-8a31-f77d1d9c3a1e">Registrydiensten</a></li>
+                                <li><a href="https://www.sidn.nl/t/diensten#category-6f29f1c8-4be5-4e78-9c3a-225c2efa01ba">Trust frameworkbeheer</a></li>
+                            </ul>
+                        </section>
+                        <section>
+                            <h1>
+                            <a href="https://www.sidn.nl/t/veilig-internet">Veilig internet</a>
+                    </h1>
+                            <ul>
+                                <li><a href="https://www.sidn.nl/t/veilig-internet#category-849c1352-ef4e-4fcd-b1b4-6e0b42f35969">Veilig .nl</a></li>
+                                <li><a href="https://www.sidn.nl/t/veilig-internet#category-5ab6a7cf-ffcf-4a20-a6b4-71369702e46a">Internetmisbruik</a></li>
+                                <li><a href="https://www.sidn.nl/t/veilig-internet#category-23219ca7-0be7-4115-806d-f19ca977f8fe">Beveiligingsmogelijkheden</a></li>
+                            </ul>
+                        </section>
+                        <section>
+                            <h1>
+                            <a href="https://www.sidn.nl/t/kennis-en-ontwikkeling">Kennis en ontwikkeling</a>
+                    </h1>
+                            <ul>
+                                <li><a href="https://www.sidn.nl/t/kennis-en-ontwikkeling#category-7192430e-1d43-4c96-8ab5-fb6c91d53282">SIDN Labs</a></li>
+                                <li><a href="https://www.sidn.nl/t/kennis-en-ontwikkeling#category-5d16cbbe-d906-4cbb-871e-418adb2ae049">Publicaties en presentaties</a></li>
+                                <li><a href="https://www.sidn.nl/t/kennis-en-ontwikkeling#category-e6148e5b-7412-49ae-a2d0-45dbdd9219cb">Marktonderzoek</a></li>
+                                <li><a href="https://www.sidn.nl/t/kennis-en-ontwikkeling#category-0d906933-9114-4981-b3cc-7a8598d16e5f">Online cursussen</a></li>
+                                <li><a href="https://www.sidn.nl/t/kennis-en-ontwikkeling#category-cc456281-3b70-4763-8aa1-eec933f8f472">Organisatie van het internet</a></li>
+                                <li><a href="https://www.sidn.nl/begrippen">Begrippenlijst</a></li>
+                            </ul>
+                        </section>
+                        <section>
+                            <h1>
+                            <a href="https://www.sidn.nl/sidn-labs/">SIDN Labs</a>
+                    </h1>
+                            <ul>
+                                <li><a href="https://www.sidn.nl/sidn-labs/software-en-tools">Software en tools</a></li>
+                                <li><a href="https://www.sidn.nl/sidn-labs/publicaties">Publicaties</a></li>
+                                <li><a href="https://stats.sidnlabs.nl">Statistieken</a></li>
+                                <li><a href="https://www.sidn.nl/sidn-labs/projecten">Projecten</a></li>
+                                <li><a href="https://www.sidn.nl/sidn-labs/over-labs">Over SIDN Labs</a></li>
+                            </ul>
+                        </section>
+                        <section>
+                            <h1>
+                            <a href="https://www.sidn.nl/t/over-sidn">Over SIDN</a>
+                    </h1>
+                            <ul>
+                                <li><a href="https://www.sidn.nl/t/over-sidn#category-2986051c-04be-46f7-bfd0-5c801151d076">Wie wij zijn</a></li>
+                                <li><a href="https://www.sidn.nl/a/over-sidn/contact">Contact</a></li>
+                                <li><a href="https://www.sidn.nl/t/over-sidn#category-d6734dd9-78d4-4430-85f6-60ae65567ae2">Maatschappelijke betrokkenheid</a></li>
+                                <li><a href="https://www.sidn.nl/t/over-sidn#category-e16b4bfb-f555-4114-8045-47b0209c87ea">Affiliate worden</a></li>
+                                <li><a href="https://www.sidn.nl/werken-bij-sidn/">Werken bij SIDN</a></li>
+                                <li><a href="https://www.sidn.nl/nieuws">Nieuwsberichten</a></li>
+                                <li><a href="https://www.sidn.nl/faq">Veelgestelde vragen</a></li>
+                            </ul>
+                        </section>
+                    </div>
+                    <div class="footer-nav-container">
+                        <div class="footer-nav">
+                            <ul>
+                                <li><a href="https://www.sidn.nl/rss/overview/">RSS</a></li>
+                                <li><a href="https://sidn-dev.cloud.usmedia.nl/a/over-sidn/algemene-voorwaarden">Algemene voorwaarden</a></li>
+                                <li><a href="https://sidn-dev.cloud.usmedia.nl/a/over-sidn/cookieverklaring">Cookieverklaring</a></li>
+                                <li><a href="https://sidn-dev.cloud.usmedia.nl/a/over-sidn/privacy">Privacy</a></li>
+                                <li><a href="https://sidn-dev.cloud.usmedia.nl/a/over-sidn/terms-of-website-use">Terms of use</a></li>
+                                <li><a href="https://sidn-dev.cloud.usmedia.nl/a/over-sidn/contact">Contact</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-payoff">
+                            <h2>SIDN - Het bedrijf achter .nl</h2>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="footer-org">
+            <div class="container" itemscope="" itemtype="http://schema.org/Organization">
+                <meta itemprop="logo" content="//sidnlabs.nl/application/themes/sidn/assets/img/og-image.png" />
+                <meta itemprop="telephone" content="+31263525500" />
+                <meta itemprop="name" content="Stichting Internet Domeinregistratie Nederland" />
+                <meta itemprop="alternateName" content="SIDN" />
+                <meta itemprop="url" content="http:/www.sidn.nl" />
+                <meta itemprop="email" content="support@sidn.nl" />
+                <h1><abbr title="Stichting Internet Domeinregistratie Nederland">SIDN</abbr></h1>
+                <ul itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+                    <meta itemprop="addressCountry" content="Nederland" />
+                    <li itemprop="streetAddress">Meander 501</li>
+                    <li><span itemprop="postalCode">6825 MD</span> <span itemprop="addressLocality">Arnhem</span></li>
+                    <li>Telefoon: <a href="tel:+31263525500">026 352 55 00</a></li>
+                    <li>E-mail: <a href="mailto:support@sidn.nl">support@sidn.nl</a></li>
+                </ul>
+                <div class="social channels">
+                    <ul>
+                        <li><a href="https://twitter.com/SIDN" class="icon-twitter2"><span>Twitter</span></a></li>
+                        <li><a href="http://www.youtube.com/user/SIDNArnhem" class="icon-youtube"><span>Youtube</span></a></li>
+                        <li><a href="http://www.linkedin.com/company/sidn" class="icon-linkedin2"><span>LinkedIn</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript" src="//sidnlabs.nl/application/themes/sidn/assets/js/app.js"></script>
+</body>
+
+</html>
+`)
 }
 
 func main() {
