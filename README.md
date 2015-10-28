@@ -15,5 +15,4 @@ The sidn java dnslib project is a required dependency.
 Both applications require that libunbound is installed.
 
 # LICENSE
-
 Licensed under the GPL version 2
