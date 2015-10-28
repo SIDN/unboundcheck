@@ -230,7 +230,7 @@ func form(w http.ResponseWriter, r *http.Request) {
     <meta name="twitter:image" content="https://www.sidn.nl/assets/img/og-image.jpg" />
     <meta name="twitter:site" content="@sidn" />
     <meta name="twitter:title" content="SIDN : Homepage" />
-    <meta name="twitter:url" content="https://www.sidn.nl/sidn-labs/" />
+    <meta name="twitter:url" content="https://www.sidnlabs.nl/" />
     <meta name="keywords" content="" />
     <script>
     (function(i, s, o, g, r, a, m) {
@@ -290,7 +290,7 @@ func form(w http.ResponseWriter, r *http.Request) {
                                     <a href="https://www.sidn.nl/t/kennis-en-ontwikkeling">Kennis en ontwikkeling</a>
                                 </li>
                                 <li class="active">
-                                    <a href="https://www.sidn.nl/sidn-labs/">SIDN Labs</a>
+                                    <a href="https://www.sidnlabs.nl/">SIDN Labs</a>
                                 </li>
                                 <li>
                                     <a href="https://www.sidn.nl/t/over-sidn">Over SIDN</a>
@@ -302,7 +302,7 @@ func form(w http.ResponseWriter, r *http.Request) {
                                 <li><a href="https://www.sidn.nl/faq/">Veelgestelde vragen</a></li>
                                 <li><a href="https://registrars-dev.cloud.usmedia.nl?language_id=1">Login registrars</a></li>
                                 <li class="language-switch">
-                                    <span>NL</span> / <a href="https://www.sidn.nl/sidn-labs/index?language_id=2">EN</a>
+                                    <span>NL</span> / <a href="https://www.sidnlabs.nl/index?language_id=2">EN</a>
                                 </li>
                             </ul>
                         </div>
@@ -349,22 +349,22 @@ func form(w http.ResponseWriter, r *http.Request) {
     <div class="page-content content">
         <nav class="sub-navigation">
             <div class="container">
-                <h1 class="sub-navigation__logo"><a href="https://www.sidn.nl/sidn-labs/"><img src="//workbench.sidnlabs.nl/assets/img/logo-sidn-labs.png" alt="SIDN Labs"></a></h1>
+                <h1 class="sub-navigation__logo"><a href="https://www.sidnlabs.nl/"><img src="//workbench.sidnlabs.nl/assets/img/logo-sidn-labs.png" alt="SIDN Labs"></a></h1>
                 <ul class="sub-navigation__list">
                     <li class="sub-navigation__item">
-                        <a class="sub-navigation__link" href="https://www.sidn.nl/sidn-labs/software-en-tools">Software en tools</a>
+                        <a class="sub-navigation__link" href="https://www.sidnlabs.nl/software-en-tools">Software en tools</a>
                     </li>
                     <li class="sub-navigation__item">
-                        <a class="sub-navigation__link" href="https://www.sidn.nl/sidn-labs/publicaties">Publicaties</a>
+                        <a class="sub-navigation__link" href="https://www.sidnlabs.nl/publicaties">Publicaties</a>
                     </li>
                     <li class="sub-navigation__item">
                         <a class="sub-navigation__link" href="https://stats.sidnlabs.nl">Statistieken</a>
                     </li>
                     <li class="sub-navigation__item">
-                        <a class="sub-navigation__link" href="https://www.sidn.nl/sidn-labs/projecten">Projecten</a>
+                        <a class="sub-navigation__link" href="https://www.sidnlabs.nl/projecten">Projecten</a>
                     </li>
                     <li class="sub-navigation__item">
-                        <a class="sub-navigation__link" href="https://www.sidn.nl/sidn-labs/over-labs">Over SIDN Labs</a>
+                        <a class="sub-navigation__link" href="https://www.sidnlabs.nl/over-labs">Over SIDN Labs</a>
                     </li>
                 </ul>
                 <ul class="client-info">
@@ -551,14 +551,14 @@ kunt controleren.
                         </section>
                         <section>
                             <h1>
-                            <a href="https://www.sidn.nl/sidn-labs/">SIDN Labs</a>
+                            <a href="https://www.sidnlabs.nl/">SIDN Labs</a>
                     </h1>
                             <ul>
-                                <li><a href="https://www.sidn.nl/sidn-labs/software-en-tools">Software en tools</a></li>
-                                <li><a href="https://www.sidn.nl/sidn-labs/publicaties">Publicaties</a></li>
+                                <li><a href="https://www.sidnlabs.nl/software-en-tools">Software en tools</a></li>
+                                <li><a href="https://www.sidnlabs.nl/publicaties">Publicaties</a></li>
                                 <li><a href="https://stats.sidnlabs.nl">Statistieken</a></li>
-                                <li><a href="https://www.sidn.nl/sidn-labs/projecten">Projecten</a></li>
-                                <li><a href="https://www.sidn.nl/sidn-labs/over-labs">Over SIDN Labs</a></li>
+                                <li><a href="https://www.sidnlabs.nl/projecten">Projecten</a></li>
+                                <li><a href="https://www.sidnlabs.nl/over-labs">Over SIDN Labs</a></li>
                             </ul>
                         </section>
                         <section>
