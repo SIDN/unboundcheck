@@ -10,6 +10,7 @@ There is also this: https://github.com/Deploy360/dnssec-portfolio-checker-exampl
 ##Java
 A Java web application which is tested with Tomcat 7.
 The sidn java dnslib project is a required dependency.
+PLEASE NOTE: The Java-version is no longer being actively maintained.
 
 ##LibUnbound
 Both applications require that libunbound is installed.
