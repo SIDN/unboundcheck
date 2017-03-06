@@ -1,5 +1,222 @@
+package main
+
+import (
+	"encoding/csv"
+	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/miekg/dns"
+	"github.com/miekg/unbound"
+	"log"
+	"log/syslog"
+	"net/http"
+	"sort"
+	"strings"
+)
+
+var TYPES = map[string]uint16{"SOA": dns.TypeSOA, "A": dns.TypeA, "NS": dns.TypeNS, "MX": dns.TypeMX, "TXT": dns.TypeTXT,
+	"AAAA": dns.TypeAAAA, "SRV": dns.TypeSRV, "DS": dns.TypeDS, "DNSKEY": dns.TypeDNSKEY}
+
+var lg *log.Logger
+
+const LIMIT = 10000
+
+type result struct {
+	typ    string // type to be checked, default to NS
+	name   string // name to be checked
+	err    string // error from unbound (if any)
+	status string // security status
+	why    string // WhyBogus from unbound (DNSSEC error)
+}
+
+type AllResults struct {
+	r []*result
+}
+
+func NewAllResults() *AllResults {
+	a := new(AllResults)
+	a.r = make([]*result, 0)
+	return a
+}
+
+func (a *AllResults) Append(r *result) { a.r = append(a.r, r) }
+func (a *AllResults) Len() int         { return len(a.r) }
+
+// Sort on status (bogus is with a 'b' so it will end up first)
+func (a *AllResults) Less(i, j int) bool { return a.r[i].status < a.r[j].status }
+func (a *AllResults) Swap(i, j int)      { a.r[i], a.r[j] = a.r[j], a.r[i] }
+
+// Create a string slice from *result for printing
+func (r *result) serialize() []string {
+	if r != nil {
+		s := make([]string, 4)
+		s[0] = r.name
+		s[1] = r.err
+		s[2] = r.status
+		s[3] = r.why
+		return s
+	}
+	return nil
+}
+
+// Create HTML from *result (not used yet)
+func (r *result) serializeToHTML() {
+	// ...
+}
+
+// Checker that checks if a delegation with these keys would be
+// secure when registry adds the DS records. TODO(mg)
+func preCheckHandler(w http.ResponseWriter, r *http.Request) {
+	return
+}
+
+func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
+var errstr string
+
+	zone = strings.TrimSpace(zone)
+	r := new(result)
+	r.name = zone
+	lg.Printf("checking %s %s\n", zone, typ)
+	if zone == "" {
+		return r
+	}
+	dnstype := dns.TypeNS
+	r.typ = "NS"
+	typ = strings.ToUpper(typ)
+	if v, ok := TYPES[typ]; ok {
+		dnstype = v
+		r.typ = typ
+	}
+	res, err := u.Resolve(zone, dnstype, dns.ClassINET)
+	if err != nil {
+		r.err = err.Error()
+		return r
+	}
+
+	if res.Rcode==0 {
+		errstr=""
+	} else {
+		if res.Rcode==2 {
+			errstr="(servfail)"
+		} else {
+			if res.Rcode==3 {
+				errstr="(nxdomain)"
+			} else {
+				errstr=fmt.Sprintf("(rcode: %d)", res.Rcode)
+			}
+		}
+	}
+
+	r.err = errstr
+
+	if res.HaveData || res.NxDomain {
+		if res.Secure {
+			r.status = "secure"
+		} else if res.Bogus {
+			r.status = "bogus"
+			r.why = res.WhyBogus
+		} else {
+			r.status = "insecure"
+		}
+	} else {
+			// r.status = "n/a"
+			if errstr != "" {
+				errstr = " " + errstr
+			}
+			r.err = fmt.Sprintf("nodata%s", errstr)
+	}
+
+	return r
+}
+
+// ReST check
+func checkHandler(w http.ResponseWriter, r *http.Request) {
+	lg.Printf("RESTful request from %s\n", r.RemoteAddr)
+
+	vars := mux.Vars(r)
+	zone := vars["domain"]
+	u := unbound.New()
+	defer u.Destroy()
+	setupUnbound(u)
+	result := unboundcheck(u, zone, "A")
+	o := csv.NewWriter(w)
+	if e := o.Write(result.serialize()); e != nil {
+		lg.Printf("Failed to write csv: %s\n", e.Error())
+	}
+	lg.Printf("%v from %s\n", result, r.RemoteAddr)
+	o.Flush()
+}
+
+// ReST check with a type (copied checkHandler because the functions are small)
+func checkHandlerType(w http.ResponseWriter, r *http.Request) {
+	lg.Printf("RESTful request from %s\n", r.RemoteAddr)
+
+	vars := mux.Vars(r)
+	zone := vars["domain"]
+	typ := vars["type"]
+	u := unbound.New()
+	defer u.Destroy()
+	setupUnbound(u)
+	result := unboundcheck(u, zone, typ)
+	o := csv.NewWriter(w)
+	if e := o.Write(result.serialize()); e != nil {
+		lg.Printf("Failed to write csv: %s\n", e.Error())
+	}
+	lg.Printf("%v from %s\n", result, r.RemoteAddr)
+	o.Flush()
+}
+
+func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
+	lg.Printf("Upload request from %s\n", r.RemoteAddr)
+
+	f, _, err := r.FormFile("domainlist")
+	if err != nil {
+		lg.Printf("Error opening CSV: %s\n", err.Error())
+		fmt.Fprintf(w, "Error opening CSV: %s\n", err.Error())
+		return
+	}
+	u := unbound.New()
+	defer u.Destroy()
+	setupUnbound(u)
+
+	v := csv.NewReader(f)
+	o := csv.NewWriter(w)
+	record, err := v.Read()
+	all := NewAllResults()
+	i := 0
+	if err != nil {
+		lg.Printf("Malformed CSV: %s ", err.Error())
+		fmt.Fprintf(w, "Malformed CSV: %s\n", err.Error())
+		return
+
+	}
+Check:
+
+	for err == nil {
+		for _, r1 := range record {
+			result := unboundcheck(u, r1, "NS")
+			lg.Printf("%v from %s\n", result, r.RemoteAddr)
+			all.Append(result)
+			i++
+			if i > LIMIT {
+				// That's enough...!
+				lg.Printf("limit seen")
+				break Check
+			}
+		}
+		record, err = v.Read()
+	}
+	sort.Sort(all)
+	for _, r := range all.r {
+		if e := o.Write(r.serialize()); e != nil {
+			lg.Printf("Failed to write csv: %s\n", e.Error())
+		}
+		o.Flush()
+	}
+}
 
 
+func form(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, `
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -52,7 +269,7 @@
         </g>
     </svg>
    </div>
-  </a> 
+  </a>
  <div class="copy">
 <h1>SIDN Labs Portfolio Checker</h1>
 Versie 20170306
@@ -106,7 +323,7 @@ kunt controleren.
       <br><br>
       LET OP: hier wordt om 'A'-records gevraagd. De uitvoer is gelijk aan de portfolio-checker uitvoer (CSV).
       Optioneel kan aan de RESTful interface ook een DNS recordtype worden meegeven, zodat er om iets anders gevraagd wordt
-      dan een A record. 
+      dan een A record.
       <br><br>
       Bijvoorbeeld: <a href="check/example.nl/SOA">portfolio.sidnlabs.nl/check/example.nl/TXT</a>
       <br><br>
@@ -136,3 +353,41 @@ kunt controleren.
 </div>
 </body>
 </html>
+`) // end of fmt.Fprint
+}
+
+func main() {
+	var err error
+	lg, err = syslog.NewLogger(syslog.LOG_INFO, log.LstdFlags)
+	if err != nil {
+		log.Fatal("NewLogger: ", err)
+	}
+	router := mux.NewRouter()
+	router.HandleFunc("/check/{domain}", checkHandler)            // ReST check a domain
+	router.HandleFunc("/check/{domain}/{type}", checkHandlerType) // ReST check a domain with a type
+	router.HandleFunc("/upload", parseHandlerCSV)
+	router.HandleFunc("/form", form)
+	http.Handle("/", router)
+
+	e := http.ListenAndServe(":8080", nil)
+	if e != nil {
+		log.Fatal("ListenAndServe: ", e)
+	}
+}
+
+// Setup the resolver and add the root's trust anchor
+// This one is used for RESTful lookups - they contain detailed errors
+func setupUnbound(u *unbound.Unbound) {
+//	u.ResolvConf("/etc/resolv.conf")
+	u.AddTa(`;; ANSWER SECTION:
+.                       168307 IN DNSKEY 257 3 8 (
+                                AwEAAagAIKlVZrpC6Ia7gEzahOR+9W29euxhJhVVLOyQ
+                                bSEW0O8gcCjFFVQUTf6v58fLjwBd0YI0EzrAcQqBGCzh
+                                /RStIoO8g0NfnfL2MTJRkxoXbfDaUeVPQuYEhg37NZWA
+                                JQ9VnMVDxP/VHL496M/QZxkjf5/Efucp2gaDX6RS6CXp
+                                oY68LsvPVjR0ZSwzz1apAzvN9dlzEheX7ICJBBtuA6G3
+                                LQpzW5hOA2hzCTMjJPJ8LbqF6dsV6DoBQzgul0sGIcGO
+                                Yl7OyQdXfZ57relSQageu+ipAdTTJ25AsRTAoub8ONGc
+                                LmqrAmRLKBP1dfwhYB4N7knNnulqQxA+Uk1ihz0=
+                                ) ; key id = 19036`)
+}
