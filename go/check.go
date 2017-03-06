@@ -130,6 +130,8 @@ var errstr string
 
 // ReST check
 func checkHandler(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Content-Type", "text/plain") // force text to prevent XSS
+
 	lg.Printf("RESTful request from %s\n", r.RemoteAddr)
 
 	vars := mux.Vars(r)
@@ -148,6 +150,8 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 
 // ReST check with a type (copied checkHandler because the functions are small)
 func checkHandlerType(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Content-Type", "text/plain") // force text to prevent XSS
+
 	lg.Printf("RESTful request from %s\n", r.RemoteAddr)
 
 	vars := mux.Vars(r)
@@ -166,6 +170,7 @@ func checkHandlerType(w http.ResponseWriter, r *http.Request) {
 }
 
 func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Content-Type", "text/plain") // force text to prevent XSS
 	lg.Printf("Upload request from %s\n", r.RemoteAddr)
 
 	f, _, err := r.FormFile("domainlist")
@@ -272,7 +277,7 @@ func form(w http.ResponseWriter, r *http.Request) {
   </a>
  <div class="copy">
 <h1>SIDN Labs Portfolio Checker</h1>
-Versie 20170306
+Versie 20170307
 <br>
 Als je een flink aantal domeinnamen hebt en je wilt deze beveiligen met <a href="http://www.dnssec.nl">DNSSEC</a>,
 dan bestaat altijd het gevaar dat je een paar details over het hoofd ziet en
