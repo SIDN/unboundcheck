@@ -1,4 +1,4 @@
-** Please be advised of the following: the root KSK is hardcoded in the sourcecode. And this moment the root is in the process of changing the KSK of the root. We will change this sourcecode as soon as the new KSK is used for signing. Please make sure you are not using the old KSK or this tool will stop working. ** 
+**Please be advised of the following: the root KSK is hardcoded in the sourcecode. And this moment the root is in the process of changing the KSK of the root. We will change this sourcecode as soon as the new KSK is used for signing. Please make sure you are not using the old KSK or this tool will stop working.** 
 
 Quick install:
 
