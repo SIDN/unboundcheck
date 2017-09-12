@@ -23,7 +23,7 @@ Working demo:
 
 https://portfolio.sidnlabs.nl/form
 
-https://portfolio.sidnlabs.nl/check/example.nl
+https://portfolio.sidnlabs.nl/check/servfail.sidnlabs.nl
 
 https://portfolio.sidnlabs.nl/check/example.nl/TXT
 
