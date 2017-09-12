@@ -70,7 +70,7 @@ func preCheckHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func unboundcheck(u *unbound.Unbound, zone string, typ string) *result {
-var errstr string
+	var errstr string
 
 	zone = strings.TrimSpace(zone)
 	r := new(result)
@@ -92,16 +92,16 @@ var errstr string
 		return r
 	}
 
-	if res.Rcode==0 {
-		errstr=""
+	if res.Rcode == 0 {
+		errstr = ""
 	} else {
-		if res.Rcode==2 {
-			errstr="(servfail)"
+		if res.Rcode == 2 {
+			errstr = "(servfail)"
 		} else {
-			if res.Rcode==3 {
-				errstr="(nxdomain)"
+			if res.Rcode == 3 {
+				errstr = "(nxdomain)"
 			} else {
-				errstr=fmt.Sprintf("(rcode: %d)", res.Rcode)
+				errstr = fmt.Sprintf("(rcode: %d)", res.Rcode)
 			}
 		}
 	}
@@ -118,11 +118,11 @@ var errstr string
 			r.status = "insecure"
 		}
 	} else {
-			// r.status = "n/a"
-			if errstr != "" {
-				errstr = " " + errstr
-			}
-			r.err = fmt.Sprintf("nodata%s", errstr)
+		// r.status = "n/a"
+		if errstr != "" {
+			errstr = " " + errstr
+		}
+		r.err = fmt.Sprintf("nodata%s", errstr)
 	}
 
 	return r
@@ -130,7 +130,7 @@ var errstr string
 
 // ReST check
 func checkHandler(w http.ResponseWriter, r *http.Request) {
-        w.Header().Set("Content-Type", "text/plain") // force text to prevent XSS
+	w.Header().Set("Content-Type", "text/plain") // force text to prevent XSS
 
 	lg.Printf("RESTful request from %s\n", r.RemoteAddr)
 
@@ -150,7 +150,7 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 
 // ReST check with a type (copied checkHandler because the functions are small)
 func checkHandlerType(w http.ResponseWriter, r *http.Request) {
-        w.Header().Set("Content-Type", "text/plain") // force text to prevent XSS
+	w.Header().Set("Content-Type", "text/plain") // force text to prevent XSS
 
 	lg.Printf("RESTful request from %s\n", r.RemoteAddr)
 
@@ -170,7 +170,7 @@ func checkHandlerType(w http.ResponseWriter, r *http.Request) {
 }
 
 func parseHandlerCSV(w http.ResponseWriter, r *http.Request) {
-        w.Header().Set("Content-Type", "text/plain") // force text to prevent XSS
+	w.Header().Set("Content-Type", "text/plain") // force text to prevent XSS
 	lg.Printf("Upload request from %s\n", r.RemoteAddr)
 
 	f, _, err := r.FormFile("domainlist")
@@ -218,7 +218,6 @@ Check:
 		o.Flush()
 	}
 }
-
 
 func form(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, `
@@ -383,9 +382,20 @@ func main() {
 // Setup the resolver and add the root's trust anchor
 // This one is used for RESTful lookups - they contain detailed errors
 func setupUnbound(u *unbound.Unbound) {
-//	u.ResolvConf("/etc/resolv.conf")
+	//	u.ResolvConf("/etc/resolv.conf")
 	u.AddTa(`;; ANSWER SECTION:
-.                       168307 IN DNSKEY 257 3 8 (
+.                        172800 IN DNSKEY 257 3 8 (
+                                AwEAAaz/tAm8yTn4Mfeh5eyI96WSVexTBAvkMgJzkKTO
+                                iW1vkIbzxeF3+/4RgWOq7HrxRixHlFlExOLAJr5emLvN
+                                7SWXgnLh4+B5xQlNVz8Og8kvArMtNROxVQuCaSnIDdD5
+                                LKyWbRd2n9WGe2R8PzgCmr3EgVLrjyBxWezF0jLHwVN8
+                                efS3rCj/EWgvIWgb9tarpVUDK/b58Da+sqqls3eNbuv7
+                                pr+eoZG+SrDK6nWeL3c6H5Apxz7LjVc1uTIdsIXxuOLY
+                                A4/ilBmSVIzuDWfdRUfhHdY6+cn8HFRm+2hM8AnXGXws
+                                9555KrUB5qihylGa8subX2Nn6UwNR1AkUTV74bU=
+                                ) ; KSK; alg = RSASHA256; key id = 20326`)
+	u.AddTa(`;; ANSWER SECTION:
+.                       172800 IN DNSKEY 257 3 8 (
                                 AwEAAagAIKlVZrpC6Ia7gEzahOR+9W29euxhJhVVLOyQ
                                 bSEW0O8gcCjFFVQUTf6v58fLjwBd0YI0EzrAcQqBGCzh
                                 /RStIoO8g0NfnfL2MTJRkxoXbfDaUeVPQuYEhg37NZWA
@@ -395,4 +405,5 @@ func setupUnbound(u *unbound.Unbound) {
                                 Yl7OyQdXfZ57relSQageu+ipAdTTJ25AsRTAoub8ONGc
                                 LmqrAmRLKBP1dfwhYB4N7knNnulqQxA+Uk1ihz0=
                                 ) ; key id = 19036`)
+
 }
