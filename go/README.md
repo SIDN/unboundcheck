@@ -1,4 +1,4 @@
-**Please be advised of the following: the root KSK is hardcoded in the sourcecode. And at this moment ICANN is in the (postponed) process of changing the KSK of the root. Currently the old (19036) and the new KSK (20326) are present in this sourcecode. We will remove the old KSK from this sourcecode when applicable. Please make sure you are using the correct KSK in your compiled version or it will stop working. See: https://www.icann.org/resources/pages/ksk-rollover for a timeline.** 
+**Please be advised of the following: the 2018 root KSK is hardcoded in this sourcecode. The old KSK has been removed from this sourcecode on October 11th 2018** 
 
 Quick install:
 
