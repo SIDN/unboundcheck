@@ -276,13 +276,15 @@ func form(w http.ResponseWriter, r *http.Request) {
   </a>
  <div class="copy">
 <h1>SIDN Labs Portfolio Checker</h1>
-Versie 20170307
+Versie 20221123
 <br>
 Als je een flink aantal domeinnamen hebt en je wilt deze beveiligen met <a href="http://www.dnssec.nl">DNSSEC</a>,
 dan bestaat altijd het gevaar dat je een paar details over het hoofd ziet en
 niet alle domeinen correct gesigned zijn. SIDN Labs heeft daarom de <a href="form">DNSSEC
 portfolio-checker</a> ontwikkeld, waarmee je dit op een snelle en eenvoudige manier
 kunt controleren.
+
+<h3>LET OP: De portfoliochecker zal in de loop van 2023 worden uitgefaseerd! Schakel daarom over op een alternatief.</h3>
 
 <h2>Selecteer een <em>CSV</em> bestand met domeinnamen</h2>
 
