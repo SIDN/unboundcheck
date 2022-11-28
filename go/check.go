@@ -331,7 +331,7 @@ kunt controleren.
       Optioneel kan aan de RESTful interface ook een DNS recordtype worden meegeven, zodat er om iets anders gevraagd wordt
       dan een A record.
       <br><br>
-      Bijvoorbeeld: <a href="check/example.nl/SOA">portfolio.sidnlabs.nl/check/example.nl/TXT</a>
+      Bijvoorbeeld: <a href="check/example.nl/SOA">portfolio.sidnlabs.nl/check/example.nl/SOA</a>
       <br><br>
       De lijst van DNS types die gebruikt kunnen worden is: SOA, A, NS, MX, TXT, AAAA, SRV, DS en DNSKEY .
       De uitvoer daarvan is gelijk aan de portfolio-checker uitvoer (CSV),
