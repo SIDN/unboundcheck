@@ -3,7 +3,6 @@
 ## Go
 
 A Go program that checks a list of domain name for (DNSSEC) resolving errors.
-Demonstration: http://portfolio.sidnlabs.nl/form
 
 There is also this: https://github.com/Deploy360/dnssec-portfolio-checker-examples
 
