@@ -1,4 +1,4 @@
-**Please be advised of the following: the 2018 root KSK is hardcoded in this sourcecode. The old KSK has been removed from this sourcecode on October 11th 2018** 
+**Please be advised of the following: the root KSK-2017 is hardcoded in this sourcecode. The old KSK has been removed from this sourcecode on October 11th 2018. Also, it is planned that a new KSK (KSK-2024) is scheduled to become active Octover 11, 2026. ** 
 
 Quick install:
 
